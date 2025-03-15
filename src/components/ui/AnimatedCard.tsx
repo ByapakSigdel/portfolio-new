@@ -16,7 +16,8 @@ export default function AnimatedCard({
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       custom={index}
-      className="p-6 bg-card rounded-lg shadow-lg"
+      
+className="p-6 bg-card rounded-lg shadow-lg border border-card-border"
     >
       {children}
     </motion.div>

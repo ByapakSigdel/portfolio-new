@@ -7,7 +7,7 @@ export default function Navigation() {
     <motion.nav
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="sticky top-0 z-50 bg-background/80 backdrop-blur-sm"
+      className="sticky top-0 z-50 bg-card/80 backdrop-blur-sm"
     >
       <div className="flex items-center justify-between p-6">
         <Link href="/" className="text-xl font-bold text-primary">

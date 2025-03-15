@@ -1,0 +1,38 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 120 100% 50%;
+    --border-color: 120 100% 25%;
+    --max-width: 1280px;
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: monospace;
+  }
+}
+
+@layer components {
+  .terminal-container {
+    max-width: var(--max-width);
+    margin: 0 auto;
+    padding: 2rem;
+    border: 2px dotted hsl(var(--foreground));
+  }
+
+  .content-box {
+    border: 1px dashed hsl(var(--foreground));
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 0 15px hsl(var(--foreground)/0.3);
+  }
+
+  .glow-text {
+    text-shadow: 0 0 10px hsl(var(--foreground));
+  }
+}
