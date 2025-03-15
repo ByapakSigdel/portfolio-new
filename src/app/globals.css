@@ -4,9 +4,12 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 120 100% 50%;
-    --border-color: 120 100% 25%;
+    /* Hex code conversions */
+    --background: 60 3% 7%;        /* #131412 (dark charcoal) */
+    --foreground: 100 94% 14%;     /* #154402 (dark forest green) */
+    --border-color: 100 94% 10%;   /* Darker green */
+    --accent: 100 94% 18%;         /* Brighter green for text */
+    
     --max-width: 1280px;
   }
 
