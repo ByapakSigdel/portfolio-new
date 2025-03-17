@@ -1,19 +1,20 @@
-export default function ProjectsSection() {
+import React from 'react';
+
+const ProjectsSection = () => {
   return (
-    <div className="content-box">
-      <h2 className="text-3xl mb-6 glow-text">PROJECTS</h2>
-      
-      <div className="space-y-4">
-        <div className="border-l-4 border-foreground pl-4">
-          <h3 className="text-xl">TTY Issue Debugger</h3>
-          <p className="text-foreground/80">Advanced terminal troubleshooting toolkit</p>
-        </div>
-        
-        <div className="border-l-4 border-foreground pl-4">
-          <h3 className="text-xl">Boot Drive Creator</h3>
-          <p className="text-foreground/80">Low-level USB boot media generator</p>
-        </div>
+    <section className="section-container">
+      <h2 className="section-header">PROJECTS</h2>
+      <div className="project-item">
+        <h3 className="item-title">TTY Issue Debugger</h3>
+        <p className="item-description">Advanced terminal troubleshooting toolkit</p>
       </div>
-    </div>
+      <div className="project-item">
+        <h3 className="item-title">Boot Drive Creator</h3>
+        <p className="item-description">Low-level USB boot media generator</p>
+      </div>
+      {/* Add more projects as needed */}
+    </section>
   );
-}
+};
+
+export default ProjectsSection;

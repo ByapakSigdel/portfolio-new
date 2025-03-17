@@ -1,10 +1,13 @@
-export default function HeroSection() {
+import React from 'react';
+
+const HeroSection = () => {
   return (
-    <div className="content-box text-center">
-      <h1 className="text-5xl mb-4 glow-text">PORTFOLIO</h1>
-      <div className="border-t-2 border-foreground pt-4">
-        <p className="text-xl">DEBUGGING SYSTEMS & BUILDING SOLUTIONS</p>
-      </div>
-    </div>
+    <section className="py-8">
+      <h1 className="text-4xl font-bold text-center text-foreground glow-text mb-4">PORTFOLIO</h1>
+      <hr className="border-foreground my-4" />
+      <p className="text-center text-foreground mb-8">DEBUGGING SYSTEMS & BUILDING SOLUTIONS</p>
+    </section>
   );
-}
+};
+
+export default HeroSection;

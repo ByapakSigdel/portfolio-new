@@ -4,13 +4,12 @@
 
 @layer base {
   :root {
-    /* Hex code conversions */
-    --background: 60 3% 7%;        /* #131412 (dark charcoal) */
-    --foreground: 100 94% 14%;     /* #154402 (dark forest green) */
-    --border-color: 100 94% 10%;   /* Darker green */
-    --accent: 100 94% 18%;         /* Brighter green for text */
-    
-    --max-width: 1280px;
+    /* Your existing color variables */
+    --background: 150 15% 6%; /* #0c110f - deep charcoal with hint of green */
+    --foreground: 135 100% 60%; /* #00ff8c - vibrant phosphor green */
+    --muted-green: 140 70% 40%; /* #1cb673 - softer green */
+    --accent-cyan: 175 100% 60%; /* #00ffed - cyan highlight */
+    /* Other variables... */
   }
 
   body {
@@ -21,21 +20,104 @@
 }
 
 @layer components {
+  /* Main terminal container - the only container with a border */
   .terminal-container {
-    max-width: var(--max-width);
+    max-width: var(--max-width, 1280px);
     margin: 0 auto;
-    padding: 2rem;
-    border: 2px dotted hsl(var(--foreground));
+    box-shadow: 0 0 20px hsl(var(--foreground)/0.3);
+    position: relative;
+    background-color: hsl(var(--background));
   }
 
-  .content-box {
-    border: 1px dashed hsl(var(--foreground));
-    padding: 1.5rem;
-    margin: 1.5rem 0;
-    box-shadow: 0 0 15px hsl(var(--foreground)/0.3);
+  /* Terminal header buttons */
+  .terminal-header {
+    display: flex;
+    gap: 0.5rem;
+    position: absolute;
+    top: -15px;
+    left: 1rem;
   }
 
+  .terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .terminal-button-red {
+    background-color: hsl(0 100% 65%);
+  }
+
+  .terminal-button-yellow {
+    background-color: hsl(60 100% 70%);
+  }
+
+  .terminal-button-green {
+    background-color: hsl(140 70% 40%);
+  }
+
+  /* Terminal content */
+  .terminal-content {
+    width: 100%;
+  }
+
+  /* Section styles */
+  .section-container {
+    margin: 2.5rem 0;
+    position: relative;
+  }
+
+  /* Command prompt before sections */
+  .section-container::before {
+    content: "> ";
+    color: hsl(var(--foreground));
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+
+  /* Section headers */
+  .section-header {
+    color: hsl(var(--accent-cyan, 175 100% 60%));
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-left: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Project and article items */
+  .project-item, .article-item {
+    margin: 1.5rem 0 1.5rem 1.5rem;
+    padding: 1rem;
+    border-left: 3px solid hsl(var(--accent-cyan, 175 100% 60%));
+    background-color: hsla(var(--background), 0.3);
+    transition: all 0.3s ease;
+  }
+
+  .project-item:hover, .article-item:hover {
+    background-color: hsla(var(--background), 0.5);
+    transform: translateX(5px);
+    box-shadow: 0 0 10px hsl(var(--foreground)/0.2);
+  }
+
+  /* Item titles */
+  .item-title {
+    color: hsl(var(--foreground));
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  /* Item descriptions */
+  .item-description {
+    color: hsl(var(--muted-green, 140 70% 40%));
+    font-size: 0.9rem;
+  }
+
+  /* Glow text effect */
   .glow-text {
-    text-shadow: 0 0 10px hsl(var(--foreground));
+    text-shadow: 0 0 10px hsl(var(--foreground)/0.8);
   }
 }
