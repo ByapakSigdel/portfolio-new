@@ -1,5 +1,7 @@
 ToDO
 
-make the whole theme black oriented
-add better animations
-add a ascii compiler for rt images
+add the animation which swiverls betwwen negative and colored ascii art in hero section.
+add the images for projects and replace them with actual projects
+redefine the articles section as well
+add graphs for skills section
+find a better font.
