@@ -45,17 +45,7 @@
     display: inline-block;
   }
 
-  .terminal-button-red {
-    background-color: hsl(0 100% 65%);
-  }
 
-  .terminal-button-yellow {
-    background-color: hsl(60 100% 70%);
-  }
-
-  .terminal-button-green {
-    background-color: hsl(140 70% 40%);
-  }
 
   /* Terminal content */
   .terminal-content {
