@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Gidole&display=swap');
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
@@ -11,11 +12,23 @@
     --accent-cyan: 175 100% 60%; /* #00ffed - cyan highlight */
     /* Other variables... */
   }
-
+  
+  @font-face {
+    font-family: 'Gidole';
+    src: url('https://fonts.googleapis.com/css2?family=Gidole&display=swap') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-family: monospace;
+    font-family: 'Gidole', monospace; /* Updated font family with fallback */
+  }
+  
+  * {
+    font-family: 'Gidole', monospace; /* Apply font to all elements */
   }
 }
 
@@ -28,7 +41,7 @@
     position: relative;
     background-color: hsl(var(--background));
   }
-
+  
   /* Terminal header buttons */
   .terminal-header {
     display: flex;
@@ -37,27 +50,25 @@
     top: -15px;
     left: 1rem;
   }
-
+  
   .terminal-button {
     width: 12px;
     height: 12px;
     border-radius: 50%;
     display: inline-block;
   }
-
-
-
+  
   /* Terminal content */
   .terminal-content {
     width: 100%;
   }
-
+  
   /* Section styles */
   .section-container {
     margin: 2.5rem 0;
     position: relative;
   }
-
+  
   /* Command prompt before sections */
   .section-container::before {
     content: "> ";
@@ -66,7 +77,7 @@
     left: 0;
     top: 0;
   }
-
+  
   /* Section headers */
   .section-header {
     color: hsl(var(--accent-cyan, 175 100% 60%));
@@ -76,7 +87,7 @@
     text-transform: uppercase;
     letter-spacing: 2px;
   }
-
+  
   /* Project and article items */
   .project-item, .article-item {
     margin: 1.5rem 0 1.5rem 1.5rem;
@@ -85,13 +96,13 @@
     background-color: hsla(var(--background), 0.3);
     transition: all 0.3s ease;
   }
-
+  
   .project-item:hover, .article-item:hover {
     background-color: hsla(var(--background), 0.5);
     transform: translateX(5px);
     box-shadow: 0 0 10px hsl(var(--foreground)/0.2);
   }
-
+  
   /* Item titles */
   .item-title {
     color: hsl(var(--foreground));
@@ -99,13 +110,13 @@
     font-size: 1.2rem;
     font-weight: bold;
   }
-
+  
   /* Item descriptions */
   .item-description {
     color: hsl(var(--muted-green, 140 70% 40%));
     font-size: 0.9rem;
   }
-
+  
   /* Glow text effect */
   .glow-text {
     text-shadow: 0 0 10px hsl(var(--foreground)/0.8);
