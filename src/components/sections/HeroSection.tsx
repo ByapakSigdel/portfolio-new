@@ -62,7 +62,7 @@ const HeroSection = () => {
   `;
 
   return (
-    <section className="max-w-6xl mx-auto">
+    <section className="w-full">
       {/* Use flex with column direction on small screens and row on larger screens */}
       <div className="flex flex-col md:flex-row items-center md:items-start">
         {/* ASCII Art container - full width on mobile, partial on desktop */}
@@ -92,12 +92,12 @@ const HeroSection = () => {
         
         {/* Introduction text - full width on mobile, partial on desktop */}
         <div className="w-full md:w-3/5 md:-ml-48 px-4 md:px-0 text-center md:text-left mt-4">
-          <h2 className="text-2xl font-bold mb-2 text-green-400">hi, iam mahan</h2>
+          <h2 className="text-2xl font-bold mb-2 text-green-400">mahan sigdel</h2>
           <p className="text-lg mb-3 text-green-400">
-            engineer by degree and lorem ipsum
+            engineer, student and enthusiastic learner
           </p>
           <p className="mb-2 text-green-400 text-sm">
-            find more about me professionally at linkedin and contact me at mail.
+            contact me at my linkedin or my mail
           </p>
         </div>
       </div>

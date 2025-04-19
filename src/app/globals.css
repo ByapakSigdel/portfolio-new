@@ -1,124 +1,134 @@
-@import url('https://fonts.googleapis.com/css2?family=Gidole&display=swap');
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@layer base {
-  :root {
-    /* Your existing color variables */
-    --background: 150 15% 6%; /* #0c110f - deep charcoal with hint of green */
-    --foreground: 135 100% 60%; /* #00ff8c - vibrant phosphor green */
-    --muted-green: 140 70% 40%; /* #1cb673 - softer green */
-    --accent-cyan: 175 100% 60%; /* #00ffed - cyan highlight */
-    /* Other variables... */
-  }
-  
-  @font-face {
-    font-family: 'Gidole';
-    src: url('https://fonts.googleapis.com/css2?family=Gidole&display=swap') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  body {
-    background-color: hsl(var(--background));
-    color: hsl(var(--foreground));
-    font-family: 'Gidole', monospace; /* Updated font family with fallback */
-  }
-  
-  * {
-    font-family: 'Gidole', monospace; /* Apply font to all elements */
+:root {
+  --terminal-green: #10b981;
+  --terminal-black: #050505;
+  --terminal-border: 1px solid #10b981;
+  --terminal-glow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+body {
+  background-color: var(--terminal-black);
+  color: var(--terminal-green);
+  font-family: 'Courier New', monospace;
+  line-height: 1.5;
+}
+
+/* Terminal/Console Styling */
+.terminal-text {
+  color: var(--terminal-green);
+  text-shadow: var(--terminal-glow);
+}
+
+.terminal-border {
+  border: var(--terminal-border);
+  border-radius: 4px;
+}
+
+.terminal-panel {
+  background-color: rgba(0, 10, 0, 0.7);
+  border: var(--terminal-border);
+  border-radius: 4px;
+  padding: 1rem;
+  box-shadow: var(--terminal-glow);
+}
+
+/* Terminal animation */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s infinite;
+}
+
+/* Terminal decorations */
+.terminal-header::before {
+  content: "> ";
+}
+
+/* ASCII art styling */
+.ascii-art {
+  font-family: monospace;
+  font-size: 5px;
+  line-height: 5px;
+  white-space: pre;
+  letter-spacing: 0;
+  text-rendering: geometricPrecision;
+}
+
+/* Section styling */
+.section-container {
+  width: 100%;
+}
+
+.section-header {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  color: var(--terminal-green);
+  text-transform: lowercase;
+}
+
+.item-title {
+  font-weight: bold;
+  color: var(--terminal-green);
+}
+
+.item-description {
+  color: var(--terminal-green);
+  opacity: 0.8;
+}
+
+/* Fix for ProjectsSection styling */
+.projects-display {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ascii-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Add these at the bottom */
+.container {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 2rem;
+}
+
+@media (min-width: 1024px) {
+  .main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: start;
   }
 }
 
-@layer components {
-  /* Main terminal container - the only container with a border */
-  .terminal-container {
-    max-width: var(--max-width, 1280px);
-    margin: 0 auto;
-    box-shadow: 0 0 20px hsl(var(--foreground)/0.3);
-    position: relative;
-    background-color: hsl(var(--background));
-  }
-  
-  /* Terminal header buttons */
-  .terminal-header {
-    display: flex;
-    gap: 0.5rem;
-    position: absolute;
-    top: -15px;
-    left: 1rem;
-  }
-  
-  .terminal-button {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-  
-  /* Terminal content */
-  .terminal-content {
-    width: 100%;
-  }
-  
-  /* Section styles */
-  .section-container {
-    margin: 2.5rem 0;
-    position: relative;
-  }
-  
-  /* Command prompt before sections */
-  .section-container::before {
-    content: "> ";
-    color: hsl(var(--foreground));
-    position: absolute;
-    left: 0;
-    top: 0;
-  }
-  
-  /* Section headers */
-  .section-header {
-    color: hsl(var(--accent-cyan, 175 100% 60%));
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-left: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-  }
-  
-  /* Project and article items */
-  .project-item, .article-item {
-    margin: 1.5rem 0 1.5rem 1.5rem;
-    padding: 1rem;
-    border-left: 3px solid hsl(var(--accent-cyan, 175 100% 60%));
-    background-color: hsla(var(--background), 0.3);
-    transition: all 0.3s ease;
-  }
-  
-  .project-item:hover, .article-item:hover {
-    background-color: hsla(var(--background), 0.5);
-    transform: translateX(5px);
-    box-shadow: 0 0 10px hsl(var(--foreground)/0.2);
-  }
-  
-  /* Item titles */
-  .item-title {
-    color: hsl(var(--foreground));
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  /* Item descriptions */
-  .item-description {
-    color: hsl(var(--muted-green, 140 70% 40%));
-    font-size: 0.9rem;
-  }
-  
-  /* Glow text effect */
-  .glow-text {
-    text-shadow: 0 0 10px hsl(var(--foreground)/0.8);
-  }
+.full-viewport {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.section-box {
+  border: var(--terminal-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  background: var(--terminal-black);
+  box-shadow: var(--terminal-glow);
+}
+
+.box-header {
+  border-bottom: var(--terminal-border);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }

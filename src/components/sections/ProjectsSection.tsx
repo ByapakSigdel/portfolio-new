@@ -120,28 +120,26 @@ const ProjectsSection = () => {
   }, [isAnimating, animationFrame, projects.length]);
 
   return (
-    <section className="section-container">
-      <h2 className="section-header">PROJECTS</h2>
-      
-      <div className="projects-display">
+    <section className="w-full">
+      <div className="flex justify-between items-center w-full">
         <div className="arrow-container left" onClick={goToPrevProject}>
           <div className="arrow-icon">◀</div>
         </div>
         
-        <div className="project-content-wrapper">
+        <div className="project-content-wrapper flex-1">
           {isAnimating ? (
-            <div className="ascii-animation">
+            <div className="ascii-animation text-center">
               <pre>{animationFrames[animationFrame]}</pre>
             </div>
           ) : (
-            <div className="project-item">
-              <div className="ascii-container">
-                <pre className="ascii-art">{projects[currentProjectIndex].asciiArt}</pre>
+            <div className="project-item flex flex-col md:flex-row">
+              <div className="ascii-container md:w-1/2">
+                <pre className="ascii-art text-green-400 text-xs">{projects[currentProjectIndex].asciiArt}</pre>
               </div>
-              <div className="project-details">
-                <h3 className="item-title">{projects[currentProjectIndex].title}</h3>
-                <p className="item-description">{projects[currentProjectIndex].description}</p>
-                <div className="project-indicator">
+              <div className="project-details md:w-1/2 text-left md:pl-4 mt-4 md:mt-0">
+                <h3 className="text-lg font-bold text-green-400">{projects[currentProjectIndex].title}</h3>
+                <p className="text-sm text-green-400 opacity-80 mb-4">{projects[currentProjectIndex].description}</p>
+                <div className="text-xs text-green-400 opacity-60">
                   {currentProjectIndex + 1} / {projects.length}
                 </div>
               </div>
@@ -153,107 +151,6 @@ const ProjectsSection = () => {
           <div className="arrow-icon">▶</div>
         </div>
       </div>
-      
-      <style jsx>{`
-        .section-container {
-          padding: 2rem;
-          text-align: center;
-        }
-        
-        .section-header {
-          margin-bottom: 2rem;
-          font-size: 2rem;
-        }
-        
-        .projects-display {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin: 2rem 0;
-          position: relative;
-        }
-        
-        .project-content-wrapper {
-          flex-grow: 1;
-          min-height: 250px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        }
-        
-        .project-item {
-          width: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          align-items: center;
-          padding: 1rem;
-        }
-        
-        .ascii-container {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding-right: 2rem;
-        }
-        
-        .project-details {
-          flex: 1;
-          text-align: left;
-          padding-left: 2rem;
-          border-left: 1px solid #333;
-        }
-        
-        .item-title {
-          font-size: 1.5rem;
-          margin-bottom: 1rem;
-        }
-        
-        .item-description {
-          margin-bottom: 1.5rem;
-          font-size: 1rem;
-          color: #666;
-        }
-        
-        .ascii-art {
-          font-family: monospace;
-          white-space: pre;
-          line-height: 1.2;
-        }
-        
-        .ascii-animation {
-          font-family: monospace;
-          white-space: pre;
-          line-height: 1.2;
-        }
-        
-        .arrow-container {
-          width: 40px;
-          height: 40px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          cursor: pointer;
-          opacity: 0.7;
-          transition: opacity 0.2s;
-        }
-        
-        .arrow-container:hover {
-          opacity: 1;
-        }
-        
-        .arrow-icon {
-          font-size: 1.5rem;
-          color: #333;
-        }
-        
-        .project-indicator {
-          font-family: monospace;
-          color: #666;
-          font-size: 0.9rem;
-        }
-      `}</style>
     </section>
   );
 };
