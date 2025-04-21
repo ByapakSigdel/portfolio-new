@@ -1,10 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import HeroSection from '../sections/HeroSection';
 import ProjectsSection from '../sections/ProjectsSection';
 import ArticlesSection from '../sections/ArticlesSection';
 import GraphsSection from '../sections/GraphsSection';
+
+// Define interface for BorderSection props
+interface BorderSectionProps {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}
 
 export default function MainLayout() {
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
@@ -28,17 +35,17 @@ export default function MainLayout() {
   const isDesktop = windowWidth > 1024; // Desktop
   
   // Common section styling with border title on top right
-  const BorderSection = ({ title, children, className = "" }) => (
-    <div className={`relative border border-green-500 rounded p-6 ${className}`}>
+  const BorderSection = ({ title, children, className = "" }: BorderSectionProps) => (
+    <div className={`relative border border-[#AEAEAE] border-opacity-15 p-6 ${className}`}>
       <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
-        <span className="text-lg text-green-500 font-bold">{title}</span>
+        <span className="text-lg text-[#256B2D] font-bold">{title}</span>
       </div>
       {children}
     </div>
   );
   
   return (
-    <div className="min-h-screen bg-black text-green-500 overflow-x-hidden">
+    <div className="min-h-screen bg-black text-[#256B2D] overflow-x-hidden">
       {/* The container wraps everything with appropriate padding */}
       <div className="max-w-screen-2xl mx-auto px-4 py-8 w-full">
         
@@ -114,14 +121,14 @@ export default function MainLayout() {
             {/* Skills/Graphs Section */}
             <BorderSection title="skills">
               <div className="h-24 flex items-center justify-center">
-                <span className="text-green-500 opacity-50">tap to view skills</span>
+                <span className="text-[#256B2D] opacity-50">tap to view skills</span>
               </div>
             </BorderSection>
             
             {/* Articles Section */}
             <BorderSection title="articles">
               <div className="h-24 flex items-center justify-center">
-                <span className="text-green-500 opacity-50">tap to view articles</span>
+                <span className="text-[#256B2D] opacity-50">tap to view articles</span>
               </div>
             </BorderSection>
           </div>

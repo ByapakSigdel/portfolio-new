@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --terminal-green: #10b981;
+  --terminal-green: #256B2D;
   --terminal-black: #050505;
-  --terminal-border: 1px solid #10b981;
+  --terminal-border: 1px solid #256B2D;
   --terminal-glow: 0 0 8px rgba(16, 185, 129, 0.4);
 }
 
