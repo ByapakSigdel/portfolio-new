@@ -6,35 +6,34 @@ import ProjectsSection from '../sections/ProjectsSection';
 import ArticlesSection from '../sections/ArticlesSection';
 import GraphsSection from '../sections/GraphsSection';
 
-// Define interface for BorderSection props
 interface BorderSectionProps {
   title: string;
   children: ReactNode;
   className?: string;
 }
 
+interface CollapsibleProps {
+  children: ReactNode;
+  defaultOpen?: boolean;
+  isSmallPhone: boolean;
+}
+
 export default function MainLayout() {
-  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 0);
+  const [windowWidth, setWindowWidth] = useState(0);
   
   useEffect(() => {
-    // Set initial width
     setWindowWidth(window.innerWidth);
-    
-    // Update width on resize
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-    };
-    
+    const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Determine layout based on screen size
-  const isMobile = windowWidth <= 767; // iPhone
-  const isTablet = windowWidth > 767 && windowWidth <= 1024; // iPad Pro
-  const isDesktop = windowWidth > 1024; // Desktop
-  
-  // Common section styling with border title on top right
+  // Breakpoints
+  const isSmallPhone = windowWidth <= 480;  // Very small devices
+  const isMobile = windowWidth <= 767;      // Mobile devices (including small phones)
+  const isTablet = windowWidth > 767 && windowWidth <= 1024;
+  const isDesktop = windowWidth > 1024;
+
   const BorderSection = ({ title, children, className = "" }: BorderSectionProps) => (
     <div className={`relative border border-[#AEAEAE] border-opacity-15 p-6 ${className}`}>
       <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
@@ -43,97 +42,94 @@ export default function MainLayout() {
       {children}
     </div>
   );
-  
+
   return (
     <div className="min-h-screen bg-black text-[#256B2D] overflow-x-hidden">
-      {/* The container wraps everything with appropriate padding */}
       <div className="max-w-screen-2xl mx-auto px-4 py-8 w-full">
         
-        {/* Desktop Layout */}
         {isDesktop && (
           <div className="flex flex-col gap-8 w-full">
-            {/* Intro Section */}
             <BorderSection title="intro" className="w-full">
               <HeroSection />
             </BorderSection>
-            
-            {/* Projects and Articles Row */}
             <div className="flex gap-6 w-full">
-              {/* Projects Section - Takes 2/3 width */}
               <BorderSection title="projects" className="w-2/3">
                 <ProjectsSection />
               </BorderSection>
-              
-              {/* Articles Section - Takes 1/3 width */}
               <BorderSection title="articles" className="w-1/3">
                 <ArticlesSection />
               </BorderSection>
             </div>
-            
-            {/* Skills/Graphs Section */}
             <BorderSection title="skills" className="w-full">
               <GraphsSection />
             </BorderSection>
           </div>
         )}
         
-        {/* Tablet Layout (iPad Pro) */}
         {isTablet && (
           <div className="flex flex-col gap-6 w-full">
-            {/* Intro Section */}
-            <BorderSection title="intro">
-              <HeroSection />
-            </BorderSection>
-            
-            {/* Projects Section */}
-            <BorderSection title="projects">
-              <ProjectsSection />
-            </BorderSection>
-            
-            {/* Skills/Graphs Section */}
-            <BorderSection title="skills">
-              <GraphsSection />
-            </BorderSection>
-            
-            {/* Articles Section */}
-            <BorderSection title="articles">
-              <ArticlesSection />
-            </BorderSection>
+            <BorderSection title="intro"><HeroSection /></BorderSection>
+            <BorderSection title="projects"><ProjectsSection /></BorderSection>
+            <BorderSection title="skills"><GraphsSection /></BorderSection>
+            <BorderSection title="articles"><ArticlesSection /></BorderSection>
           </div>
         )}
         
-        {/* Mobile Layout (iPhone) */}
         {isMobile && (
           <div className="flex flex-col gap-4 w-full">
-            {/* Intro Section - Collapsed by default */}
             <BorderSection title="intro">
-              <div className="flex justify-end">
-                <span>▼</span>
-              </div>
-              <HeroSection />
+              <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>
+                <HeroSection />
+              </Collapsible>
             </BorderSection>
-            
-            {/* Projects Section */}
+
             <BorderSection title="projects">
-              <ProjectsSection />
+              <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>
+                <ProjectsSection />
+              </Collapsible>
             </BorderSection>
-            
-            {/* Skills/Graphs Section */}
+
             <BorderSection title="skills">
-              <div className="h-24 flex items-center justify-center">
-                <span className="text-[#256B2D] opacity-50">tap to view skills</span>
-              </div>
+              <Collapsible defaultOpen={false} isSmallPhone={isSmallPhone}>
+                <GraphsSection />
+              </Collapsible>
             </BorderSection>
-            
-            {/* Articles Section */}
+
             <BorderSection title="articles">
-              <div className="h-24 flex items-center justify-center">
-                <span className="text-[#256B2D] opacity-50">tap to view articles</span>
-              </div>
+              <Collapsible defaultOpen={false} isSmallPhone={isSmallPhone}>
+                <ArticlesSection />
+              </Collapsible>
             </BorderSection>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+function Collapsible({ children, defaultOpen = false, isSmallPhone }: CollapsibleProps) {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+  
+  if (isSmallPhone) {
+    return <>{children}</>;
+  }
+
+  return (
+    <div>
+      <div 
+        className="flex justify-end cursor-pointer mb-2" 
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span className="text-[#256B2D]">
+          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-sm opacity-70">tap to expand</span>}
+        </span>
+      </div>
+      
+      {isOpen ? children : (
+        <div className="h-12 flex items-center justify-center">
+          <span className="text-[#256B2D] opacity-50">Content collapsed</span>
+        </div>
+      )}
     </div>
   );
 }
