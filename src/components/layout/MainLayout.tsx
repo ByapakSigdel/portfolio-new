@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, ReactNode } from 'react';
+import { motion } from 'framer-motion';
 import HeroSection from '../sections/HeroSection';
 import ProjectsSection from '../sections/ProjectsSection';
 import ArticlesSection from '../sections/ArticlesSection';
@@ -18,6 +19,31 @@ interface CollapsibleProps {
   isSmallPhone: boolean;
 }
 
+const sectionVariants = {
+  hover: {
+    scale: 1.02,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 15
+    }
+  },
+  initial: {
+    scale: 1,
+    background: 'rgba(37, 107, 45, 0)'
+  }
+};
+
+const glowVariants = {
+  hover: {
+    opacity: 0.3,
+    transition: { duration: 0.3 }
+  },
+  initial: {
+    opacity: 0
+  }
+};
+
 export default function MainLayout() {
   const [windowWidth, setWindowWidth] = useState(0);
   
@@ -29,18 +55,35 @@ export default function MainLayout() {
   }, []);
   
   // Breakpoints
-  const isSmallPhone = windowWidth <= 480;  // Very small devices
-  const isMobile = windowWidth <= 767;      // Mobile devices (including small phones)
+  const isSmallPhone = windowWidth <= 480;
+  const isMobile = windowWidth <= 767;
   const isTablet = windowWidth > 767 && windowWidth <= 1024;
   const isDesktop = windowWidth > 1024;
 
   const BorderSection = ({ title, children, className = "" }: BorderSectionProps) => (
-    <div className={`relative border border-[#AEAEAE] border-opacity-15 p-6 ${className}`}>
+    <motion.div
+      className={`relative border border-[#AEAEAE] border-opacity-15 p-6 ${className}`}
+      variants={sectionVariants}
+      whileHover="hover"
+      initial="initial"
+    >
+      {/* Glow effect */}
+      <motion.div
+        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,rgba(37,107,45,0.2)_0%,transparent_70%)]"
+        variants={glowVariants}
+      />
+      
       <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
         <span className="text-lg text-[#256B2D] font-bold">{title}</span>
       </div>
-      {children}
-    </div>
+      
+      <motion.div
+        whileHover={{ scale: 1.01 }}
+        transition={{ type: "spring", stiffness: 400 }}
+      >
+        {children}
+      </motion.div>
+    </motion.div>
   );
 
   return (
@@ -52,14 +95,17 @@ export default function MainLayout() {
             <BorderSection title="intro" className="w-full">
               <HeroSection />
             </BorderSection>
+            
             <div className="flex gap-6 w-full">
               <BorderSection title="projects" className="w-2/3">
                 <ProjectsSection />
               </BorderSection>
+              
               <BorderSection title="articles" className="w-1/3">
                 <ArticlesSection />
               </BorderSection>
             </div>
+            
             <BorderSection title="skills" className="w-full">
               <GraphsSection />
             </BorderSection>
@@ -115,21 +161,35 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0.5 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <div 
         className="flex justify-end cursor-pointer mb-2" 
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="text-[#256B2D]">
+        <motion.span 
+          className="text-[#256B2D]"
+          whileHover={{ scale: 1.1 }}
+        >
           {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-sm opacity-70">tap to expand</span>}
-        </span>
+        </motion.span>
       </div>
       
-      {isOpen ? children : (
-        <div className="h-12 flex items-center justify-center">
-          <span className="text-[#256B2D] opacity-50">Content collapsed</span>
-        </div>
-      )}
-    </div>
+      <motion.div
+        initial={{ height: 0 }}
+        animate={{ height: isOpen ? 'auto' : 48 }}
+        transition={{ type: "spring", stiffness: 300 }}
+        className="overflow-hidden"
+      >
+        {isOpen ? children : (
+          <div className="h-12 flex items-center justify-center">
+            <span className="text-[#256B2D] opacity-50">Content collapsed</span>
+          </div>
+        )}
+      </motion.div>
+    </motion.div>
   );
 }
