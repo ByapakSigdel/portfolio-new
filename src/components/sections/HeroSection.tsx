@@ -41,7 +41,7 @@ const HeroSection = () => {
                                 ███████████▓▒▓▓▓██▓▓▓███████████▓▓▓▓██▓▓█                           
                                ████████▓█▓▓▓░░░▓██▓▓████▓▓▓▓▓█▓▓▓██▓▓▓███                           
                                ████▓▓█▓▓█▓▓▓▓▓▓▓██▓▓█▓████████▓▓▓▓█▓▓▓█████                         
-                               ████▓▓█▓▓█▓▓▓░░░░▓█▓▓▓▓▓▓█████▓▓▓▓▓▓▓▓▓▓███████                     
+                               ████▓▓█▓▓█▓▓▓░░░░▓█▓▓▓▓▓█████▓▓▓▓▓▓▓▓▓▓███████                     
                                ███████▓░█▓▓░░░░░▓█▓▓▓▓██▓█████▓▓▓▓▓▓▓▓▓▓█████▓▓█                    
                                ███████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓█▓▓▓▓▓▓▓▓█████▓▓███▓                
                              █████████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓▓▓▓▓▓▓▓▓▓███████▓▓███               
@@ -70,7 +70,7 @@ const HeroSection = () => {
           <div className="overflow-hidden">
             {/* ASCII art content with responsive styling */}
             <div 
-              className="text-green-400 font-mono whitespace-pre mx-auto md:mx-0"
+              className="text-[#256B2D] font-mono whitespace-pre mx-auto md:mx-0"
               style={{
                 textShadow: '0 0 5px rgba(0, 0, 0, 1)',
                 fontFamily: '"Courier New", monospace',
@@ -92,11 +92,11 @@ const HeroSection = () => {
         
         {/* Introduction text - full width on mobile, partial on desktop */}
         <div className="w-full md:w-3/5 md:-ml-48 px-4 md:px-0 text-center md:text-left mt-4">
-          <h2 className="text-2xl font-bold mb-2 text-green-400">mahan sigdel</h2>
-          <p className="text-lg mb-3 text-green-400">
+          <h2 className="text-2xl font-bold mb-2 text-[#256B2D]">mahan sigdel</h2>
+          <p className="text-lg mb-3 text-[#256B2D]">
             engineer, student and enthusiastic learner
           </p>
-          <p className="mb-2 text-green-400 text-sm">
+          <p className="mb-2 text-[#256B2D] text-sm">
             contact me at my linkedin or my mail
           </p>
         </div>

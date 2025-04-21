@@ -21,21 +21,36 @@ const ArticlesSection = () => {
     }
   ];
 
+  const textColor = { color: '#256B2D' };
+  
   return (
     <section className="w-full">
       <div className="flex flex-col gap-4">
         {articles.map((article, index) => (
-          <div key={index} className="flex items-center justify-between group hover:bg-green-900/10 p-2 rounded transition-colors">
+          <div 
+            key={index} 
+            className="flex items-center justify-between group hover:bg-opacity-10 hover:bg-green-900 p-2 rounded transition-colors"
+          >
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 opacity-60 flex items-center justify-center text-xs">
+              <div 
+                className="w-6 h-6 flex items-center justify-center text-xs"
+                style={{ ...textColor, opacity: 0.6 }}
+              >
                 {index + 1}.
               </div>
               <div>
-                <h3 className="text-sm font-bold text-green-400">{article.title}</h3>
-                <p className="text-xs text-green-400 opacity-80 hidden md:block">{article.description}</p>
+                <h3 className="text-sm font-bold" style={textColor}>
+                  {article.title}
+                </h3>
+                <p 
+                  className="text-xs hidden md:block" 
+                  style={{ ...textColor, opacity: 0.8 }}
+                >
+                  {article.description}
+                </p>
               </div>
             </div>
-            <span className="text-green-400">➚</span>
+            <span style={textColor}>➚</span>
           </div>
         ))}
       </div>

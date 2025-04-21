@@ -11,38 +11,38 @@ const ProjectsSection = () => {
       title: "TTY Issue Debugger",
       description: "Advanced terminal troubleshooting toolkit",
       asciiArt: `
-   _____________________
-  |  _________________  |
-  | |                 | |
-  | |  $ sudo debug   | |
-  | |  Scanning...    | |
-  | |  TTY restored   | |
-  | |_________________| |
-  |_____________________|
+ _____________________
+ | _________________ |
+ | |                 | |
+ | | $ sudo debug    | |
+ | | Scanning...     | |
+ | | TTY restored    | |
+ | |_________________| |
+ |_____________________|
       `
     },
     {
       title: "Boot Drive Creator",
       description: "Low-level USB boot media generator",
       asciiArt: `
-       _______
-      |       |
-  ____|       |____
- |                |
- |  [=======]     |
+ _______
+ |       |
+ ____| |____
+ |              |
+ | [=======]    |
  |________________|
-      USB BOOT
+       USB BOOT
       `
     },
     {
       title: "Network Protocol Scanner",
       description: "Security tool for protocol vulnerability assessment",
       asciiArt: `
-       .-~~-.
-      |     |
+ .-~~-.
+ |    |
  .----' .--. '----.
  '----. '--' .----'
-      |     |
+       |    |
        '-__-'
      SCANNING...
       `
@@ -51,13 +51,13 @@ const ProjectsSection = () => {
       title: "File Encryption System",
       description: "Military-grade file security and encryption",
       asciiArt: `
-   __________
-  /          \\
- /  🔒        \\
-|   SECRET     |
-|   CONTENT    |
- \\            /
-  \\__________/
+ __________
+ /          \\
+ /    🔒     \\
+|   SECRET    |
+|   CONTENT   |
+ \\          /
+ \\__________/
       `
     }
   ];
@@ -65,24 +65,24 @@ const ProjectsSection = () => {
   // Animation frames for transitions
   const animationFrames = [
     `
-    .....
-    .....
-    .....
+ .....
+ .....
+ .....
     `,
     `
-    *....
-    ..*..
-    ...**
+ *....
+ ..*..
+ ...**
     `,
     `
-    **...
-    .***.
-    .****
+ **...
+ .***.
+ .****
     `,
     `
-    *****
-    *****
-    *****
+ *****
+ *****
+ *****
     `
   ];
 
@@ -109,46 +109,51 @@ const ProjectsSection = () => {
           setAnimationFrame(animationFrame + 1);
         } else {
           setIsAnimating(false);
-          setCurrentProjectIndex((prevIndex) => 
+          setCurrentProjectIndex((prevIndex) =>
             prevIndex === projects.length - 1 ? 0 : prevIndex + 1
           );
         }
       }, 150);
-      
       return () => clearTimeout(timer);
     }
   }, [isAnimating, animationFrame, projects.length]);
+
+  const textColor = { color: '#256B2D' };
 
   return (
     <section className="w-full">
       <div className="flex justify-between items-center w-full">
         <div className="arrow-container left" onClick={goToPrevProject}>
-          <div className="arrow-icon">◀</div>
+          <div className="arrow-icon" style={textColor}>◀</div>
         </div>
-        
         <div className="project-content-wrapper flex-1">
           {isAnimating ? (
             <div className="ascii-animation text-center">
-              <pre>{animationFrames[animationFrame]}</pre>
+              <pre style={textColor}>{animationFrames[animationFrame]}</pre>
             </div>
           ) : (
             <div className="project-item flex flex-col md:flex-row">
               <div className="ascii-container md:w-1/2">
-                <pre className="ascii-art text-green-400 text-xs">{projects[currentProjectIndex].asciiArt}</pre>
+                <pre className="ascii-art text-xs" style={textColor}>
+                  {projects[currentProjectIndex].asciiArt}
+                </pre>
               </div>
               <div className="project-details md:w-1/2 text-left md:pl-4 mt-4 md:mt-0">
-                <h3 className="text-lg font-bold text-green-400">{projects[currentProjectIndex].title}</h3>
-                <p className="text-sm text-green-400 opacity-80 mb-4">{projects[currentProjectIndex].description}</p>
-                <div className="text-xs text-green-400 opacity-60">
+                <h3 className="text-lg font-bold" style={textColor}>
+                  {projects[currentProjectIndex].title}
+                </h3>
+                <p className="text-sm mb-4" style={{...textColor, opacity: 0.8}}>
+                  {projects[currentProjectIndex].description}
+                </p>
+                <div className="text-xs" style={{...textColor, opacity: 0.6}}>
                   {currentProjectIndex + 1} / {projects.length}
                 </div>
               </div>
             </div>
           )}
         </div>
-        
         <div className="arrow-container right" onClick={goToNextProject}>
-          <div className="arrow-icon">▶</div>
+          <div className="arrow-icon" style={textColor}>▶</div>
         </div>
       </div>
     </section>
