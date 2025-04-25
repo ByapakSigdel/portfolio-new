@@ -21,7 +21,7 @@ interface CollapsibleProps {
 
 const sectionVariants = {
   hover: {
-    scale: 1.02,
+    scale: 1.01, // Reduced scale effect
     transition: {
       type: "spring",
       stiffness: 300,
@@ -36,7 +36,7 @@ const sectionVariants = {
 
 const glowVariants = {
   hover: {
-    opacity: 0.3,
+    opacity: 0.2,
     transition: { duration: 0.3 }
   },
   initial: {
@@ -62,7 +62,7 @@ export default function MainLayout() {
 
   const BorderSection = ({ title, children, className = "" }: BorderSectionProps) => (
     <motion.div
-      className={`relative border border-[#AEAEAE] border-opacity-15 p-6 ${className}`}
+      className={`relative border border-[#AEAEAE] border-opacity-15 p-3 md:p-4 ${className}`} // Reduced padding
       variants={sectionVariants}
       whileHover="hover"
       initial="initial"
@@ -74,11 +74,11 @@ export default function MainLayout() {
       />
       
       <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
-        <span className="text-lg text-[#256B2D] font-bold">{title}</span>
+        <span className="text-sm md:text-base text-[#256B2D] font-bold">{title}</span> {/* Reduced font size */}
       </div>
       
       <motion.div
-        whileHover={{ scale: 1.01 }}
+        whileHover={{ scale: 1.005 }} // Minimal scale effect
         transition={{ type: "spring", stiffness: 400 }}
       >
         {children}
@@ -88,15 +88,15 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen bg-black text-[#256B2D] overflow-x-hidden">
-      <div className="max-w-screen-2xl mx-auto px-4 py-8 w-full">
+      <div className="max-w-screen-xl mx-auto px-2 py-4 w-full"> {/* Reduced padding and max width */}
         
         {isDesktop && (
-          <div className="flex flex-col gap-8 w-full">
+          <div className="flex flex-col gap-4 w-full"> {/* Reduced gap */}
             <BorderSection title="intro" className="w-full">
               <HeroSection />
             </BorderSection>
             
-            <div className="flex gap-6 w-full">
+            <div className="flex gap-4 w-full"> {/* Reduced gap */}
               <BorderSection title="projects" className="w-2/3">
                 <ProjectsSection />
               </BorderSection>
@@ -113,7 +113,7 @@ export default function MainLayout() {
         )}
         
         {isTablet && (
-          <div className="flex flex-col gap-6 w-full">
+          <div className="flex flex-col gap-4 w-full"> {/* Reduced gap */}
             <BorderSection title="intro"><HeroSection /></BorderSection>
             <BorderSection title="projects"><ProjectsSection /></BorderSection>
             <BorderSection title="skills"><GraphsSection /></BorderSection>
@@ -122,7 +122,7 @@ export default function MainLayout() {
         )}
         
         {isMobile && (
-          <div className="flex flex-col gap-4 w-full">
+          <div className="flex flex-col gap-3 w-full"> {/* Reduced gap */}
             <BorderSection title="intro">
               <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>
                 <HeroSection />
@@ -162,31 +162,31 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
 
   return (
     <motion.div
-      initial={{ opacity: 0.5 }}
+      initial={{ opacity: 0.7 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.2 }}
     >
       <div 
-        className="flex justify-end cursor-pointer mb-2" 
+        className="flex justify-end cursor-pointer mb-1" // Reduced margin
         onClick={() => setIsOpen(!isOpen)}
       >
         <motion.span 
-          className="text-[#256B2D]"
-          whileHover={{ scale: 1.1 }}
+          className="text-[#256B2D] text-xs" // Reduced text size
+          whileHover={{ scale: 1.05 }} // Reduced hover effect
         >
-          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-sm opacity-70">tap to expand</span>}
+          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-xs opacity-70">tap to expand</span>}
         </motion.span>
       </div>
       
       <motion.div
         initial={{ height: 0 }}
-        animate={{ height: isOpen ? 'auto' : 48 }}
+        animate={{ height: isOpen ? 'auto' : 32 }} // Reduced collapsed height
         transition={{ type: "spring", stiffness: 300 }}
         className="overflow-hidden"
       >
         {isOpen ? children : (
-          <div className="h-12 flex items-center justify-center">
-            <span className="text-[#256B2D] opacity-50">Content collapsed</span>
+          <div className="h-8 flex items-center justify-center"> {/* Reduced height */}
+            <span className="text-[#256B2D] opacity-50 text-xs">Content collapsed</span>
           </div>
         )}
       </motion.div>

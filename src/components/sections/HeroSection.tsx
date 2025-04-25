@@ -2,7 +2,6 @@
 import React from 'react';
 
 const HeroSection = () => {
-  // ASCII art (unchanged)
   const asciiArt = `
                                                                                                     
                                                                                                     
@@ -10,7 +9,7 @@ const HeroSection = () => {
                                                 █▓▒▓▓▓▓▓██                                          
                                               ██▒▒▓▓▓▓█████▓                                        
                                       ████████████████████████▓▓▓▓▓▓▓██                             
-                             █████████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█████▓▓▓▓▓▓▓▓██                             
+                             █████████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█████▓▓▓▓▓▓▓▓██                             
                           ███▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█████▓▓█▓▓▓▓██                             
                        ███▓██▓▓▓▓▓▓██████▓▓▓▓▓▓▓▓▒░░░░░░▓▓▓████████▓▓██                             
                      ██▒▓▓▓▓▓▓▓███▓▓▓▓▓▓▓▓▓▓▓▓▓▓░▒████▒░░▓▓▓▓█▓▓███████                             
@@ -51,9 +50,9 @@ const HeroSection = () => {
                            ██████████▓▓░█▓▓░░░░░▓█░▒█▓▓▓▓███████████▓▓▓▓▓▓▓█████                    
                           ███████████▓▓░█▓▓░░░░░▓█░▒█▓▓▓▓████████▓▓▓▓▓███▓██████                    
                         █████████████▓███▓▓░░░░░▓█░▒█▓▓▓▓▓▓████████████▓▓▓▓▓▓███                    
-                        █████████████▓▓▓█▓▓░░░░░▓██▓▓▓▓██▓▓████████▓▓▓▓▓▓▓▓▓▓▓████                  
-                        ████████▓▓███▓▓▓█▓▓░░░░░▓█▓▓▓▓████████▓▓█▓▓▓▓▓███▓▓▓▓▓████▓█                
-                        ███████▒▓▓▓▓▓▓▓▓█▓▓░░░░▒▓█▓▓▓█▓▓▒▒▒██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███████               
+                        █████████████▓▓▓█▓▓░░░░░▓██▓▓▓▓██▓▓████████▓▓▓▓▓▓▓▓▓▓████                  
+                        ████████▓▓███▓▓▓█▓▓░░░░░▓█▓▓▓▓████████▓▓█▓▓▓▓███▓▓▓▓▓████▓█                
+                        ███████▒▓▓▓▓▓▓▓▓█▓▓░░░░▒▓█▓▓▓█▓▓▒▒▒██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓███████               
                         █████▓▓▓▓▓▓▓▓▓███▓▓░░░░▓██▓▓▓▓▓▓▓▒▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██████████               
                         █████▓▓▓▓▓▓▓▓▓███▓▓░░░░▓██▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓████████████
                            █████▓▓▓▓▓▓███▓▓▓░░▓▓███▓▓▓▓▓▓██▓▓███████████████████████ 
@@ -63,40 +62,43 @@ const HeroSection = () => {
 
   return (
     <section className="w-full">
-      {/* Use flex with column direction on small screens and row on larger screens */}
-      <div className="flex flex-col md:flex-row items-center md:items-start">
-        {/* ASCII Art container - full width on mobile, partial on desktop */}
-        <div className="w-full md:w-2/5 flex justify-center md:justify-start mb-6 md:mb-0">
-          <div className="overflow-hidden">
-            {/* ASCII art content with responsive styling */}
-            <div 
-              className="text-[#256B2D] font-mono whitespace-pre mx-auto md:mx-0"
-              style={{
-                textShadow: '0 0 5px rgba(0, 0, 0, 1)',
-                fontFamily: '"Courier New", monospace',
-                fontSize: '5px', // Small font size
-                lineHeight: '5px', // Matching line height
-                letterSpacing: '0px',
-                textRendering: 'geometricPrecision',
-                fontKerning: 'none',
-                fontVariantLigatures: 'none',
-                transform: 'scale(0.8)', // Scale down
-                transformOrigin: 'center top', // Center on mobile, left top on desktop
-                maxWidth: '100%',
-                display: 'block'
-              }}
-              dangerouslySetInnerHTML={{ __html: asciiArt }}
-            />
+      <div className="flex flex-col md:flex-row items-center md:items-center gap-0 md:gap-2">
+        {/* ASCII Art Container - reduced padding and size */}
+        <div className="w-1/2 md:w-2/5 flex justify-center md:justify-start">
+          <div className="p-1 md:p-2 bg-black/20 backdrop-blur-sm rounded-lg">
+            <div className="relative w-full flex justify-center"> 
+              <pre 
+                className="text-[#256B2D] font-mono whitespace-pre block mx-auto"
+                style={{
+                  textShadow: '0 0 6px rgba(37, 107, 45, 0.4), 0 0 10px rgba(37, 107, 45, 0.3)',
+                  fontFamily: '"Courier New", monospace',
+                  fontSize: '3.5px', // Reduced font size
+                  lineHeight: '4px', // Reduced line height
+                  transform: 'scale(0.95)',
+                  transformOrigin: 'center center',
+                  letterSpacing: '0px' // Tighter letter spacing
+                }}
+                dangerouslySetInnerHTML={{ __html: asciiArt }}
+              />
+              <div className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: 'linear-gradient(45deg, rgba(37,107,45,0.03) 0%, rgba(0,0,0,0.02) 100%)',
+                  mixBlendMode: 'screen'
+                }}
+              />
+            </div>
           </div>
         </div>
-        
-        {/* Introduction text - full width on mobile, partial on desktop */}
-        <div className="w-full md:w-3/5 md:-ml-48 px-4 md:px-0 text-center md:text-left mt-4">
-          <h2 className="text-2xl font-bold mb-2 text-[#256B2D]">mahan sigdel</h2>
-          <p className="text-lg mb-3 text-[#256B2D]">
+
+        {/* Text Content - adjusted positioning and spacing */}
+        <div className="w-1/2 md:w-3/5 px-1 md:px-0 md:-ml-12"> 
+          <h2 className="text-lg md:text-xl font-bold text-[#256B2D] drop-shadow-[0_0_4px_rgba(37,107,45,0.4)]">
+            mahan sigdel
+          </h2>
+          <p className="text-sm md:text-base text-[#256B2D]/90 contrast-125 mt-0">
             engineer, student and enthusiastic learner
           </p>
-          <p className="mb-2 text-[#256B2D] text-sm">
+          <p className="text-xs md:text-sm text-[#256B2D]/80 contrast-125 mt-0">
             contact me at my linkedin or my mail
           </p>
         </div>
