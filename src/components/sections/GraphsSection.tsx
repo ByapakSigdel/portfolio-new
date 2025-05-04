@@ -31,6 +31,11 @@ ChartJS.register(
 );
 
 export default function GraphsSection() {
+  // Configuration variables - CHANGE THESE
+  const GITHUB_USERNAME = 'yourusername'; // Replace with your GitHub username
+  const GITHUB_PAT = ''; // Add your GitHub Personal Access Token here
+  
+  // Styling variables
   const textColor = { color: '#256B2D' };
   const greenColor = 'rgba(37, 107, 45, 0.9)';
   const lightGreenColor = 'rgba(37, 107, 45, 0.3)';
@@ -38,10 +43,10 @@ export default function GraphsSection() {
   // Animation state
   const [animate, setAnimate] = useState<boolean>(false);
   const [radarAnimate, setRadarAnimate] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>(''); // GitHub username
   const [contributionData, setContributionData] = useState<number[]>([]);
   const [contributionLabels, setContributionLabels] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   
   // ECharts references
   const pieChartRef = useRef<HTMLDivElement>(null);
@@ -56,13 +61,13 @@ export default function GraphsSection() {
     // Trigger animations after component mount
     setAnimate(true);
     
-    // Set your GitHub username here
-    setUsername('yourusername'); // Replace with your actual GitHub username
-    
     // Initialize pie chart with a slight delay
     setTimeout(() => {
       initializePieChart();
     }, 500);
+    
+    // Fetch GitHub contribution data
+    fetchGitHubContributions();
     
     // Cleanup function
     return () => {
@@ -93,13 +98,6 @@ export default function GraphsSection() {
     };
   }, []);
   
-  // Effect to fetch GitHub contribution data when username changes
-  useEffect(() => {
-    if (username) {
-      fetchGitHubContributions();
-    }
-  }, [username]);
-  
   // Effect to initialize line chart when data is available
   useEffect(() => {
     if (contributionData.length > 0 && contributionLabels.length > 0) {
@@ -107,68 +105,136 @@ export default function GraphsSection() {
     }
   }, [contributionData, contributionLabels]);
   
+  // Fetch GitHub contribution data using GraphQL API
   const fetchGitHubContributions = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
-      // For demonstration purposes, we'll use a proxy API or generate data
-      // In a production app, you would use GitHub's GraphQL API with proper authentication
-      
-      // Since GitHub's API requires authentication for contribution data,
-      // and we can't include auth tokens in client-side code,
-      // we'll generate realistic data here
-      
-      // This would normally be an API call like:
-      // const response = await fetch(`https://api.github.com/users/${username}/contributions`);
-      // const data = await response.json();
-      
-      // Generating realistic contribution data for last 30 days
-      const today = new Date();
-      const labels: string[] = [];
-      const data: number[] = [];
-      
-      for (let i = 29; i >= 0; i--) {
-        const date = new Date(today);
-        date.setDate(date.getDate() - i);
-        
-        const month = date.toLocaleString('default', { month: 'short' });
-        const day = date.getDate();
-        labels.push(`${month} ${day}`);
-        
-        // Generate weighted random contribution count
-        // More contributions on weekdays (1-5), fewer on weekends (0, 6)
-        const dayOfWeek = date.getDay();
-        let contributions: number;
-        
-        if (dayOfWeek > 0 && dayOfWeek < 6) {
-          // Weekdays: 0-12 contributions with higher probability of more
-          contributions = Math.floor(Math.random() * 13);
-          if (Math.random() > 0.6) {
-            contributions += Math.floor(Math.random() * 8);
-          }
-        } else {
-          // Weekends: 0-5 contributions
-          contributions = Math.floor(Math.random() * 6);
-        }
-        
-        data.push(contributions);
+      if (!GITHUB_USERNAME) {
+        throw new Error('GitHub username not provided');
       }
+      
+      // If PAT is not provided, generate mock data
+      if (!GITHUB_PAT) {
+        generateMockContributionData();
+        return;
+      }
+      
+      // GraphQL query to fetch contribution data
+      const query = `
+        query {
+          user(login: "${GITHUB_USERNAME}") {
+            contributionsCollection {
+              contributionCalendar {
+                weeks(last: 5) {
+                  contributionDays {
+                    date
+                    contributionCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `;
+      
+      const response = await fetch('https://api.github.com/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${GITHUB_PAT}`
+        },
+        body: JSON.stringify({ query })
+      });
+      
+      if (!response.ok) {
+        throw new Error(`GitHub API error: ${response.status}`);
+      }
+      
+      const result = await response.json();
+      
+      if (result.errors) {
+        throw new Error(result.errors[0].message);
+      }
+      
+      // Process contribution data
+      const calendar = result.data.user.contributionsCollection.contributionCalendar;
+      const contributionDays: { date: string; contributionCount: number }[] = [];
+      
+      // Flatten the weeks array to get all contribution days
+      calendar.weeks.forEach((week: any) => {
+        week.contributionDays.forEach((day: any) => {
+          contributionDays.push({
+            date: day.date,
+            contributionCount: day.contributionCount
+          });
+        });
+      });
+      
+      // Sort by date and take the last 30 days
+      contributionDays.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      const last30Days = contributionDays.slice(-30);
+      
+      const labels = last30Days.map(day => {
+        const date = new Date(day.date);
+        const month = date.toLocaleString('default', { month: 'short' });
+        const dayOfMonth = date.getDate();
+        return `${month} ${dayOfMonth}`;
+      });
+      
+      const data = last30Days.map(day => day.contributionCount);
       
       setContributionLabels(labels);
       setContributionData(data);
     } catch (error) {
       console.error('Error fetching GitHub contributions:', error);
-      // Fallback data in case of error
-      const fallbackLabels: string[] = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-      const fallbackData: number[] = [5, 8, 12, 7];
+      setError(error instanceof Error ? error.message : 'Unknown error');
       
-      setContributionLabels(fallbackLabels);
-      setContributionData(fallbackData);
+      // Fallback to mock data
+      generateMockContributionData();
     } finally {
       setLoading(false);
     }
   };
   
-  // Initialize Pie Chart
+  // Generate mock contribution data
+  const generateMockContributionData = () => {
+    const today = new Date();
+    const labels: string[] = [];
+    const data: number[] = [];
+    
+    for (let i = 29; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      
+      const month = date.toLocaleString('default', { month: 'short' });
+      const day = date.getDate();
+      labels.push(`${month} ${day}`);
+      
+      // Generate weighted random contribution count
+      const dayOfWeek = date.getDay();
+      let contributions: number;
+      
+      if (dayOfWeek > 0 && dayOfWeek < 6) {
+        // Weekdays: 0-12 contributions with higher probability of more
+        contributions = Math.floor(Math.random() * 13);
+        if (Math.random() > 0.6) {
+          contributions += Math.floor(Math.random() * 8);
+        }
+      } else {
+        // Weekends: 0-5 contributions
+        contributions = Math.floor(Math.random() * 6);
+      }
+      
+      data.push(contributions);
+    }
+    
+    setContributionLabels(labels);
+    setContributionData(data);
+  };
+  
+  // Initialize Pie Chart for hobbies and interests
   const initializePieChart = () => {
     if (pieChartRef.current && !pieChartInstance.current) {
       pieChartInstance.current = echarts.init(pieChartRef.current);
@@ -176,7 +242,7 @@ export default function GraphsSection() {
       const pieChartOption = {
         backgroundColor: 'transparent',
         title: {
-          text: 'Frameworks',
+          text: '',
           left: 'center',
           top: 10,
           textStyle: {
@@ -192,29 +258,30 @@ export default function GraphsSection() {
             fontFamily: 'monospace',
             fontSize: 12,
             color: '#fff'
-          }
+          },
+          formatter: '{a} <br/>{b}: {c} hrs/week ({d}%)'
         },
         visualMap: {
           show: false,
-          min: 5,
-          max: 35,
+          min: 1,
+          max: 25,
           inRange: {
             colorLightness: [0.2, 0.8]
           }
         },
         series: [
           {
-            name: 'Frameworks',
+            name: 'Time Spent',
             type: 'pie',
             radius: '55%',
             center: ['50%', '55%'],
             data: [
-              { value: 35, name: 'React' },
-              { value: 25, name: 'Next.js' },
-              { value: 10, name: 'Vue' },
-              { value: 5, name: 'Angular' },
-              { value: 15, name: 'Express' },
-              { value: 10, name: 'Django' }
+              { value: 25, name: 'Programming' },
+              { value: 15, name: 'Art & Design' },
+              { value: 10, name: 'Writing' },
+              { value: 8, name: 'Gaming' },
+              { value: 6, name: 'Reading' },
+              { value: 5, name: 'Music' }
             ].sort(function(a, b) {
               return a.value - b.value;
             }),
@@ -239,9 +306,9 @@ export default function GraphsSection() {
             animationType: 'scale',
             animationEasing: 'elasticOut',
             animationDelay: function(idx: number) {
-              return Math.random() * 300; // Longer delay for smoother animation
+              return Math.random() * 300;
             },
-            animationDuration: 2500 // Longer duration for smoother animation
+            animationDuration: 2500
           }
         ]
       };
@@ -272,7 +339,7 @@ export default function GraphsSection() {
       const lineChartOption = {
         backgroundColor: 'transparent',
         title: {
-          text: 'GitHub Contributions (Last 30 Days)',
+          text: ``,
           left: 'center',
           top: 10,
           textStyle: {
@@ -291,7 +358,7 @@ export default function GraphsSection() {
           },
           formatter: function(params: any) {
             const data = params[0];
-            return `${data.name}: ${data.value} contributions`;
+            return `${data.name}: ${data.value} contribution${data.value !== 1 ? 's' : ''}`;
           }
         },
         grid: {
@@ -345,7 +412,7 @@ export default function GraphsSection() {
           {
             name: 'Contributions',
             type: 'line',
-            smooth: true,
+            smooth: false,
             data: contributionData,
             symbolSize: 8,
             itemStyle: {
@@ -411,7 +478,17 @@ export default function GraphsSection() {
         display: false
       },
       title: {
-        display: false
+        display: true,
+        text: 'Technologies & Skills',
+        color: greenColor,
+        font: {
+          family: 'monospace',
+          size: 14
+        },
+        padding: {
+          top: 10,
+          bottom: 10
+        }
       },
       tooltip: {
         backgroundColor: 'rgba(37, 107, 45, 0.9)',
@@ -432,14 +509,23 @@ export default function GraphsSection() {
     responsive: true
   };
 
-  // Get radar chart data - using state to trigger animations
+  // Get radar chart data with technologies and skills
   const getRadarData = () => {
     return {
-      labels: ['JavaScript', 'TypeScript', 'Python', 'Rust', 'Go', 'C++'],
+      labels: [
+        'JavaScript/TypeScript', 
+        'React/Next.js', 
+        'Node.js/Express', 
+        'HTML/CSS',
+        'Python',
+        'Database/SQL',
+        'DevOps/CI/CD',
+        'Mobile Dev'
+      ],
       datasets: [
         {
           label: 'Proficiency',
-          data: (animate || radarAnimate) ? [85, 78, 92, 65, 70, 60] : [0, 0, 0, 0, 0, 0],
+          data: (animate || radarAnimate) ? [90, 85, 80, 88, 75, 78, 65, 70] : [0, 0, 0, 0, 0, 0, 0, 0],
           backgroundColor: lightGreenColor,
           borderColor: greenColor,
           borderWidth: 2,
@@ -452,7 +538,7 @@ export default function GraphsSection() {
     };
   };
 
-  const languagesOptions: ChartOptions<'radar'> = {
+  const skillsOptions: ChartOptions<'radar'> = {
     ...commonOptions,
     scales: {
       r: {
@@ -502,11 +588,17 @@ export default function GraphsSection() {
     resetLineChartAnimation();
   };
 
+  // Handle refresh button for GitHub data
+  const handleRefreshGitHub = () => {
+    setLoading(true);
+    fetchGitHubContributions();
+  };
+
   return (
     <section className="w-full">
       {/* Top row - two charts side by side on larger screens, stacked on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        {/* Languages Chart */}
+        {/* Technologies & Skills Chart */}
         <div 
           className="h-72 rounded p-4 transition-all duration-500"
           onMouseEnter={handleRadarHover}
@@ -515,12 +607,12 @@ export default function GraphsSection() {
             <Radar 
               ref={radarChartRef}
               data={getRadarData()} 
-              options={languagesOptions}
+              options={skillsOptions}
             />
           </div>
         </div>
         
-        {/* Frameworks Chart - ECharts */}
+        {/* Interests & Hobbies Chart - ECharts */}
         <div 
           className="h-72 rounded p-4 transition-all duration-500"
           onMouseEnter={handlePieHover}
@@ -539,14 +631,37 @@ export default function GraphsSection() {
           className="h-72 rounded p-4 transition-all duration-500"
           onMouseEnter={handleLineHover}
         >
+          <div className="flex justify-between items-center mb-2">
+            <div>
+              {error && (
+                <p style={{...textColor, fontSize: '0.8rem'}} className="text-opacity-80">
+                  {error.includes('GitHub API') ? 'Using mock data. Set PAT for real data.' : error}
+                </p>
+              )}
+            </div>
+            {/* <button 
+              onClick={handleRefreshGitHub}
+              className="text-xs py-1 px-2 rounded" 
+              style={{
+                backgroundColor: lightGreenColor,
+                color: '#fff',
+                fontFamily: 'monospace',
+                cursor: 'pointer'
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Refresh Data'}
+            </button> */}
+          </div>
+          
           {loading ? (
-            <div className="flex h-full items-center justify-center">
+            <div className="flex h-64 items-center justify-center">
               <p style={textColor}>Loading GitHub contribution data...</p>
             </div>
           ) : (
             <div 
               ref={lineChartRef} 
-              className="h-full w-full" 
+              className="h-64 w-full" 
             />
           )}
         </div>
