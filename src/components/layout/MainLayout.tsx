@@ -11,6 +11,7 @@ interface BorderSectionProps {
   title: string;
   children: ReactNode;
   className?: string;
+  noPadding?: boolean;
 }
 
 interface CollapsibleProps {
@@ -61,9 +62,9 @@ export default function MainLayout() {
   const isTablet = windowWidth > 767 && windowWidth <= 1024;
   const isDesktop = windowWidth > 1024;
 
-  const BorderSection = ({ title, children, className = "" }: BorderSectionProps) => (
+  const BorderSection = ({ title, children, className = "", noPadding = false }: BorderSectionProps) => (
     <motion.div
-      className={`relative border p-3 md:p-4 ${className}`}
+      className={`relative border ${noPadding ? 'p-0' : 'p-3 md:p-4'} ${className}`}
       variants={sectionVariants}
       whileHover="hover"
       initial="initial"
@@ -87,10 +88,18 @@ export default function MainLayout() {
       <motion.div
         whileHover={{ scale: 1.005 }}
         transition={{ type: "spring", stiffness: 400 }}
+        className={noPadding ? 'w-full h-full' : ''}
       >
         {children}
       </motion.div>
     </motion.div>
+  );
+
+  // Special Hero Section without inner scaling or padding
+  const HeroContainer = () => (
+    <BorderSection title="intro" className="w-full" noPadding={true}>
+      <HeroSection />
+    </BorderSection>
   );
 
   return (
@@ -99,9 +108,7 @@ export default function MainLayout() {
         
         {isDesktop && (
           <div className="flex flex-col gap-4 w-full">
-            <BorderSection title="intro" className="w-full">
-              <HeroSection />
-            </BorderSection>
+            <HeroContainer />
             
             <div className="flex gap-4 w-full">
               <BorderSection title="projects" className="w-2/3">
@@ -121,7 +128,7 @@ export default function MainLayout() {
         
         {isTablet && (
           <div className="flex flex-col gap-4 w-full">
-            <BorderSection title="intro"><HeroSection /></BorderSection>
+            <HeroContainer />
             <BorderSection title="projects"><ProjectsSection /></BorderSection>
             <BorderSection title="skills"><GraphsSection /></BorderSection>
             <BorderSection title="articles"><ArticlesSection /></BorderSection>
@@ -130,11 +137,7 @@ export default function MainLayout() {
         
         {isMobile && (
           <div className="flex flex-col gap-3 w-full">
-            <BorderSection title="intro">
-              <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>
-                <HeroSection />
-              </Collapsible>
-            </BorderSection>
+            <HeroContainer />
 
             <BorderSection title="projects">
               <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>

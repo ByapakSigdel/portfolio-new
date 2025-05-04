@@ -11,9 +11,11 @@ import {
   Legend,
   ArcElement,
   CategoryScale,
-  LinearScale
+  LinearScale,
+  ChartOptions
 } from 'chart.js';
 import * as echarts from 'echarts';
+import type { EChartsType } from 'echarts';
 
 // Register ChartJS components
 ChartJS.register(
@@ -34,17 +36,21 @@ export default function GraphsSection() {
   const lightGreenColor = 'rgba(37, 107, 45, 0.3)';
   
   // Animation state
-  const [animate, setAnimate] = useState(false);
-  const [username, setUsername] = useState(''); // GitHub username
-  const [contributionData, setContributionData] = useState([]);
-  const [contributionLabels, setContributionLabels] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [animate, setAnimate] = useState<boolean>(false);
+  const [radarAnimate, setRadarAnimate] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>(''); // GitHub username
+  const [contributionData, setContributionData] = useState<number[]>([]);
+  const [contributionLabels, setContributionLabels] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   
   // ECharts references
-  const pieChartRef = useRef(null);
-  const pieChartInstance = useRef(null);
-  const lineChartRef = useRef(null);
-  const lineChartInstance = useRef(null);
+  const pieChartRef = useRef<HTMLDivElement>(null);
+  const pieChartInstance = useRef<EChartsType | null>(null);
+  const lineChartRef = useRef<HTMLDivElement>(null);
+  const lineChartInstance = useRef<EChartsType | null>(null);
+  
+  // Chart.js reference
+  const radarChartRef = useRef<any>(null);
   
   useEffect(() => {
     // Trigger animations after component mount
@@ -53,18 +59,18 @@ export default function GraphsSection() {
     // Set your GitHub username here
     setUsername('yourusername'); // Replace with your actual GitHub username
     
-    // Initialize pie chart
-    initializePieChart();
+    // Initialize pie chart with a slight delay
+    setTimeout(() => {
+      initializePieChart();
+    }, 500);
     
     // Cleanup function
     return () => {
       if (pieChartInstance.current) {
         pieChartInstance.current.dispose();
-        pieChartInstance.current = null;
       }
       if (lineChartInstance.current) {
         lineChartInstance.current.dispose();
-        lineChartInstance.current = null;
       }
     };
   }, []);
@@ -117,8 +123,8 @@ export default function GraphsSection() {
       
       // Generating realistic contribution data for last 30 days
       const today = new Date();
-      const labels = [];
-      const data = [];
+      const labels: string[] = [];
+      const data: number[] = [];
       
       for (let i = 29; i >= 0; i--) {
         const date = new Date(today);
@@ -131,7 +137,7 @@ export default function GraphsSection() {
         // Generate weighted random contribution count
         // More contributions on weekdays (1-5), fewer on weekends (0, 6)
         const dayOfWeek = date.getDay();
-        let contributions;
+        let contributions: number;
         
         if (dayOfWeek > 0 && dayOfWeek < 6) {
           // Weekdays: 0-12 contributions with higher probability of more
@@ -152,8 +158,8 @@ export default function GraphsSection() {
     } catch (error) {
       console.error('Error fetching GitHub contributions:', error);
       // Fallback data in case of error
-      const fallbackLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-      const fallbackData = [5, 8, 12, 7];
+      const fallbackLabels: string[] = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+      const fallbackData: number[] = [5, 8, 12, 7];
       
       setContributionLabels(fallbackLabels);
       setContributionData(fallbackData);
@@ -232,16 +238,30 @@ export default function GraphsSection() {
             },
             animationType: 'scale',
             animationEasing: 'elasticOut',
-            animationDelay: function(idx) {
-              return Math.random() * 200;
-            }
+            animationDelay: function(idx: number) {
+              return Math.random() * 300; // Longer delay for smoother animation
+            },
+            animationDuration: 2500 // Longer duration for smoother animation
           }
         ]
       };
       
       // Apply options
-      pieChartInstance.current.setOption(pieChartOption);
+      if (pieChartInstance.current) {
+        pieChartInstance.current.setOption(pieChartOption);
+      }
     }
+  };
+  
+  // Re-initialize pie chart with animation
+  const resetPieChartAnimation = () => {
+    if (pieChartInstance.current) {
+      pieChartInstance.current.dispose();
+    }
+    pieChartInstance.current = null;
+    setTimeout(() => {
+      initializePieChart();
+    }, 50);
   };
   
   // Initialize Line Chart with GitHub contribution data
@@ -269,7 +289,7 @@ export default function GraphsSection() {
             fontSize: 12,
             color: '#fff'
           },
-          formatter: function(params) {
+          formatter: function(params: any) {
             const data = params[0];
             return `${data.name}: ${data.value} contributions`;
           }
@@ -363,15 +383,28 @@ export default function GraphsSection() {
       };
       
       // Apply options
-      lineChartInstance.current.setOption(lineChartOption);
+      if (lineChartInstance.current) {
+        lineChartInstance.current.setOption(lineChartOption);
+      }
     }
+  };
+  
+  // Re-initialize line chart with animation
+  const resetLineChartAnimation = () => {
+    if (lineChartInstance.current) {
+      lineChartInstance.current.dispose();
+    }
+    lineChartInstance.current = null;
+    setTimeout(() => {
+      initializeLineChart();
+    }, 50);
   };
 
   // Common options for radar chart
-  const commonOptions = {
+  const commonOptions: ChartOptions<'radar'> = {
     animation: {
       duration: 2000,
-      easing: 'easeOutQuart'
+      easing: 'easeOutQuart' as const
     },
     plugins: {
       legend: {
@@ -399,25 +432,27 @@ export default function GraphsSection() {
     responsive: true
   };
 
-  // Languages Data - Radar Chart
-  const languagesData = {
-    labels: ['JavaScript', 'TypeScript', 'Python', 'Rust', 'Go', 'C++'],
-    datasets: [
-      {
-        label: 'Proficiency',
-        data: animate ? [85, 78, 92, 65, 70, 60] : [0, 0, 0, 0, 0, 0],
-        backgroundColor: lightGreenColor,
-        borderColor: greenColor,
-        borderWidth: 2,
-        pointBackgroundColor: greenColor,
-        pointBorderColor: '#fff',
-        pointHoverBackgroundColor: '#fff',
-        pointHoverBorderColor: greenColor
-      }
-    ]
+  // Get radar chart data - using state to trigger animations
+  const getRadarData = () => {
+    return {
+      labels: ['JavaScript', 'TypeScript', 'Python', 'Rust', 'Go', 'C++'],
+      datasets: [
+        {
+          label: 'Proficiency',
+          data: (animate || radarAnimate) ? [85, 78, 92, 65, 70, 60] : [0, 0, 0, 0, 0, 0],
+          backgroundColor: lightGreenColor,
+          borderColor: greenColor,
+          borderWidth: 2,
+          pointBackgroundColor: greenColor,
+          pointBorderColor: '#fff',
+          pointHoverBackgroundColor: '#fff',
+          pointHoverBorderColor: greenColor
+        }
+      ]
+    };
   };
 
-  const languagesOptions = {
+  const languagesOptions: ChartOptions<'radar'> = {
     ...commonOptions,
     scales: {
       r: {
@@ -451,19 +486,45 @@ export default function GraphsSection() {
     }
   };
 
+  // Handle hover states
+  const handleRadarHover = () => {
+    setRadarAnimate(false); // Reset animation state first
+    setTimeout(() => {
+      setRadarAnimate(true); // Then set it to true to trigger animation
+    }, 50);
+  };
+
+  const handlePieHover = () => {
+    resetPieChartAnimation();
+  };
+
+  const handleLineHover = () => {
+    resetLineChartAnimation();
+  };
+
   return (
     <section className="w-full">
       {/* Top row - two charts side by side on larger screens, stacked on mobile */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         {/* Languages Chart */}
-        <div className="h-72 rounded p-4 transition-all duration-500">
+        <div 
+          className="h-72 rounded p-4 transition-all duration-500"
+          onMouseEnter={handleRadarHover}
+        >
           <div className="h-full">
-            <Radar data={languagesData} options={languagesOptions} />
+            <Radar 
+              ref={radarChartRef}
+              data={getRadarData()} 
+              options={languagesOptions}
+            />
           </div>
         </div>
         
         {/* Frameworks Chart - ECharts */}
-        <div className="h-72 rounded p-4 transition-all duration-500">
+        <div 
+          className="h-72 rounded p-4 transition-all duration-500"
+          onMouseEnter={handlePieHover}
+        >
           <div 
             ref={pieChartRef} 
             className="h-full w-full" 
@@ -474,7 +535,10 @@ export default function GraphsSection() {
       {/* Bottom row - full width chart */}
       <div className="w-full">
         {/* GitHub Contributions - ECharts Line */}
-        <div className="h-72 rounded p-4 transition-all duration-500">
+        <div 
+          className="h-72 rounded p-4 transition-all duration-500"
+          onMouseEnter={handleLineHover}
+        >
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <p style={textColor}>Loading GitHub contribution data...</p>

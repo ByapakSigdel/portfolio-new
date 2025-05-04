@@ -1,7 +1,5 @@
 ToDO
 
-add the animation which swiverls betwwen negative and colored ascii art in hero section.
-add the images for projects and replace them with actual projects
-redefine the articles section as well
-add graphs for skills section
-find a better font.
+add the atual graph for github contributions
+if the project has a article when selected the article should also be highlighted
+add actual data
