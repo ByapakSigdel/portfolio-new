@@ -12,6 +12,8 @@ interface BorderSectionProps {
   children: ReactNode;
   className?: string;
   noPadding?: boolean;
+  fixedHeight?: boolean;
+  height?: string;
 }
 
 interface CollapsibleProps {
@@ -62,13 +64,16 @@ export default function MainLayout() {
   const isTablet = windowWidth > 767 && windowWidth <= 1024;
   const isDesktop = windowWidth > 1024;
 
-  const BorderSection = ({ title, children, className = "", noPadding = false }: BorderSectionProps) => (
+  const BorderSection = ({ title, children, className = "", noPadding = false, fixedHeight = false, height = "400px" }: BorderSectionProps) => (
     <motion.div
       className={`relative border ${noPadding ? 'p-0' : 'p-3 md:p-4'} ${className}`}
       variants={sectionVariants}
       whileHover="hover"
       initial="initial"
-      style={{ borderStyle: 'solid' }}
+      style={{ 
+        borderStyle: 'solid',
+        height: fixedHeight ? height : 'auto'
+      }}
     >
       {/* Border Glow Effect */}
       <motion.div
@@ -85,13 +90,15 @@ export default function MainLayout() {
         <span className="text-sm md:text-base text-[#256B2D] font-bold">{title}</span>
       </div>
       
-      <motion.div
-        whileHover={{ scale: 1.005 }}
-        transition={{ type: "spring", stiffness: 400 }}
-        className={noPadding ? 'w-full h-full' : ''}
+      <div 
+        className={`${fixedHeight ? 'h-full custom-scrollbar' : ''} ${noPadding ? 'w-full h-full' : ''}`}
+        style={{ 
+          overflowY: fixedHeight ? 'auto' : 'visible',
+          paddingRight: fixedHeight ? '4px' : '0'
+        }}
       >
         {children}
-      </motion.div>
+      </div>
     </motion.div>
   );
 
@@ -102,8 +109,44 @@ export default function MainLayout() {
     </BorderSection>
   );
 
+  // Calculate appropriate heights based on screen size
+  const getProjectsSectionHeight = () => {
+    if (isDesktop) return "500px";
+    if (isTablet) return "450px";
+    return "400px";
+  };
+
   return (
     <div className="min-h-screen bg-black text-[#256B2D] overflow-x-hidden">
+      {/* Custom Scrollbar Styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+          background-color: #000000;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: rgba(37, 107, 45, 0.5);
+          border-radius: 0;
+          border: none;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: rgba(37, 107, 45, 0.8);
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background-color: rgba(0, 0, 0, 0.3);
+          border-radius: 0;
+        }
+        
+        /* Firefox scrollbar */
+        .custom-scrollbar {
+          scrollbar-width: thick;
+          scrollbar-color: rgba(37, 107, 45, 0.5) #000000;
+        }
+      `}</style>
+
       <div className="max-w-screen-xl mx-auto px-2 py-4 w-full">
         
         {isDesktop && (
@@ -111,7 +154,12 @@ export default function MainLayout() {
             <HeroContainer />
             
             <div className="flex gap-4 w-full">
-              <BorderSection title="projects" className="w-2/3">
+              <BorderSection 
+                title="projects" 
+                className="w-2/3" 
+                fixedHeight={true} 
+                height={getProjectsSectionHeight()}
+              >
                 <ProjectsSection />
               </BorderSection>
               
@@ -129,9 +177,19 @@ export default function MainLayout() {
         {isTablet && (
           <div className="flex flex-col gap-4 w-full">
             <HeroContainer />
-            <BorderSection title="projects"><ProjectsSection /></BorderSection>
-            <BorderSection title="skills"><GraphsSection /></BorderSection>
-            <BorderSection title="articles"><ArticlesSection /></BorderSection>
+            <BorderSection 
+              title="projects" 
+              fixedHeight={true} 
+              height={getProjectsSectionHeight()}
+            >
+              <ProjectsSection />
+            </BorderSection>
+            <BorderSection title="skills">
+              <GraphsSection />
+            </BorderSection>
+            <BorderSection title="articles">
+              <ArticlesSection />
+            </BorderSection>
           </div>
         )}
         
@@ -139,7 +197,11 @@ export default function MainLayout() {
           <div className="flex flex-col gap-3 w-full">
             <HeroContainer />
 
-            <BorderSection title="projects">
+            <BorderSection 
+              title="projects" 
+              fixedHeight={!isSmallPhone} 
+              height={isSmallPhone ? "auto" : "350px"}
+            >
               <Collapsible defaultOpen={true} isSmallPhone={isSmallPhone}>
                 <ProjectsSection />
               </Collapsible>
@@ -192,7 +254,7 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
         initial={{ height: 0 }}
         animate={{ height: isOpen ? 'auto' : 32 }}
         transition={{ type: "spring", stiffness: 300 }}
-        className="overflow-hidden"
+        className="overflow-hidden custom-scrollbar"
       >
         {isOpen ? children : (
           <div className="h-8 flex items-center justify-center">

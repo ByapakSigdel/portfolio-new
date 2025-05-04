@@ -85,74 +85,24 @@ const HeroSection = () => {
     "Fear is not evil. It tells you what your weakness is."
   ];
   
-  // Data arrays for icons
-  const musicData = [
-    "Nujabes - Spiritual State",
-    "Porter Robinson - Nurture",
-    "Kendrick Lamar - To Pimp a Butterfly",
-    "Radiohead - OK Computer",
-    "Yoko Kanno - Cowboy Bebop OST"
-  ];
-
-  const movieData = [
-    "Blade Runner 2049",
-    "Your Name",
-    "Interstellar",
-    "Spirited Away",
-    "The Social Network"
-  ];
-
-  const imageData = [
-    "Tokyo at night",
-    "Mountain landscapes",
-    "Cyberpunk aesthetics",
-    "Minimal architecture",
-    "Vintage film photography"
-  ];
-
-  const bookData = [
-    "Kafka on the Shore - Haruki Murakami",
-    "Snow Crash - Neal Stephenson",
-    "The Three-Body Problem - Liu Cixin",
-    "Dune - Frank Herbert",
-    "Siddhartha - Hermann Hesse"
-  ];
-
-  const sparkData = [
-    "Building a personal knowledge graph",
-    "Learning Rust programming",
-    "Exploring generative art",
-    "Studying functional programming paradigms",
-    "Building mechanical keyboards"
+  // Riddles for the moving banner
+  const riddles = [
+    "... ..- -... ... -.-. .-. .. -... . / - --- / -.-. .... .. -.-- .- -....- .--. --- .--. / --. ..- ..-. ..-.",
   ];
   
   const [quote, setQuote] = useState('');
-  const [currentIconData, setCurrentIconData] = useState({ type: 'music', data: musicData[0] });
+  const [currentRiddle, setCurrentRiddle] = useState('');
   
-  // Border glow and hover effects from MainLayout
+  // Modified section variants - only border color change, no scale
   const sectionVariants = {
     hover: {
-      scale: 1.01,
       borderColor: 'rgba(37, 107, 45, 0.6)',
       transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 15
+        duration: 0.3
       }
     },
     initial: {
-      scale: 1,
       borderColor: 'rgba(174, 174, 174, 0.15)'
-    }
-  };
-
-  const glowVariants = {
-    hover: {
-      opacity: 0.5,
-      transition: { duration: 0.3 }
-    },
-    initial: {
-      opacity: 0
     }
   };
 
@@ -176,39 +126,10 @@ const HeroSection = () => {
     const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
     setQuote(randomQuote);
     
-    // Cycle through different icon data every 5 seconds
-    const iconTypes = ['music', 'movie', 'image', 'book', 'spark'];
-    const iconDataSets = [musicData, movieData, imageData, bookData, sparkData];
-    
-    let currentIndex = 0;
-    let dataIndex = 0;
-    
-    const intervalId = setInterval(() => {
-      dataIndex = (dataIndex + 1) % iconDataSets[currentIndex].length;
-      if (dataIndex === 0) {
-        currentIndex = (currentIndex + 1) % iconTypes.length;
-      }
-      
-      setCurrentIconData({
-        type: iconTypes[currentIndex],
-        data: iconDataSets[currentIndex][dataIndex]
-      });
-    }, 5000);
-    
-    return () => clearInterval(intervalId);
+    // Set random riddle
+    const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
+    setCurrentRiddle(`${randomRiddle}`);
   }, []);
-
-  // Get the appropriate icon based on current type
-  const getCurrentIcon = () => {
-    switch (currentIconData.type) {
-      case 'music': return <Music size={20} className="text-green-600" />;
-      case 'movie': return <Film size={20} className="text-green-600" />;
-      case 'image': return <Image size={20} className="text-green-600" />;
-      case 'book': return <BookOpen size={20} className="text-green-600" />;
-      case 'spark': return <Sparkles size={20} className="text-green-600" />;
-      default: return <Music size={20} className="text-green-600" />;
-    }
-  };
 
   return (
     <div className="relative w-full">
@@ -228,31 +149,15 @@ const HeroSection = () => {
           dangerouslySetInnerHTML={{ __html: asciiArt }}
         />
 
-        {/* Content Container with Border */}
+        {/* Content Container */}
         <div className="ml-0 md:ml-8 w-full flex flex-col">
-          {/* Name, Description, Quote Section */}
+          {/* Name, Description, Quote Section - No top border and no right border */}
           <motion.div
-            className="relative border border-solid p-4 mb-4 w-full"
+            className="relative border-l border-b border-solid p-4 w-full"
             variants={sectionVariants}
             whileHover="hover"
             initial="initial"
           >
-            {/* Border Glow Effect */}
-            <motion.div
-              className="absolute inset-0 -z-10 pointer-events-none"
-              variants={glowVariants}
-            >
-              <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute -bottom-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute left-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute right-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#256B2D] to-transparent" />
-            </motion.div>
-            
-            {/* Header Label */}
-            <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
-              <span className="text-sm md:text-base text-[#256B2D] font-bold">about</span>
-            </div>
-            
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
               <h1 className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
                 mahan sigdel
@@ -269,69 +174,51 @@ const HeroSection = () => {
             </div>
           </motion.div>
           
-          {/* Icons and Moving Banner Section */}
+          {/* Moving Banner - Green background with black text */}
+          <div className="relative w-full overflow-hidden h-6 bg-green-700">
+            <motion.div
+              className="absolute whitespace-nowrap flex items-center h-full"
+              variants={bannerVariants}
+              animate="animate"
+            >
+              <div className="flex items-center">
+                <span className="text-xs text-black font-mono">{currentRiddle}</span>
+                <span className="mx-6 text-black opacity-70">•</span>
+              </div>
+              
+              {/* Duplicate riddle to create seamless loop */}
+              {Array(10).fill(0).map((_, i) => (
+                <div key={i} className="flex items-center">
+                  <span className="text-xs text-black font-mono">{currentRiddle}</span>
+                  <span className="mx-6 text-black opacity-70">•</span>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+          
+          {/* Icons Section - No bottom border and no right border */}
           <motion.div
-            className="relative border border-solid p-3 w-full"
+            className="relative border-l border-t border-solid p-4 w-full"
             variants={sectionVariants}
             whileHover="hover"
             initial="initial"
           >
-            {/* Border Glow Effect */}
-            <motion.div
-              className="absolute inset-0 -z-10 pointer-events-none"
-              variants={glowVariants}
-            >
-              <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute -bottom-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute left-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#256B2D] to-transparent" />
-              <div className="absolute right-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#256B2D] to-transparent" />
-            </motion.div>
-            
-            {/* Header Label */}
-            <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
-              <span className="text-sm md:text-base text-[#256B2D] font-bold">interests</span>
-            </div>
-            
-            {/* Icons Section */}
-            <div className="flex justify-center md:justify-start space-x-6 mb-3">
+            {/* Icons Only */}
+            <div className="flex justify-center md:justify-evenly space-x-8">
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Music size={20} className={currentIconData.type === 'music' ? 'text-green-500' : 'text-green-700 opacity-50'} />
+                <Music size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Film size={20} className={currentIconData.type === 'movie' ? 'text-green-500' : 'text-green-700 opacity-50'} />
+                <Film size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Image size={20} className={currentIconData.type === 'image' ? 'text-green-500' : 'text-green-700 opacity-50'} />
+                <Image size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <BookOpen size={20} className={currentIconData.type === 'book' ? 'text-green-500' : 'text-green-700 opacity-50'} />
+                <BookOpen size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Sparkles size={20} className={currentIconData.type === 'spark' ? 'text-green-500' : 'text-green-700 opacity-50'} />
-              </motion.div>
-            </div>
-            
-            {/* Moving Banner */}
-            <div className="relative w-full overflow-hidden h-6 border-t border-green-900 border-opacity-30">
-              <motion.div
-                className="absolute whitespace-nowrap flex items-center h-full"
-                variants={bannerVariants}
-                animate="animate"
-              >
-                <div className="flex items-center">
-                  {getCurrentIcon()}
-                  <span className="ml-2 text-xs text-green-600">{currentIconData.data}</span>
-                  <span className="mx-6 text-green-700 opacity-50">•</span>
-                </div>
-                
-                {/* Duplicate content to create seamless loop */}
-                {Array(10).fill(0).map((_, i) => (
-                  <div key={i} className="flex items-center">
-                    {getCurrentIcon()}
-                    <span className="ml-2 text-xs text-green-600">{currentIconData.data}</span>
-                    <span className="mx-6 text-green-700 opacity-50">•</span>
-                  </div>
-                ))}
+                <Sparkles size={20} className="text-green-600" />
               </motion.div>
             </div>
           </motion.div>

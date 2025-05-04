@@ -1,49 +1,31 @@
 'use client';
 import React, { useState } from 'react';
+import { FaArrowRight } from 'react-icons/fa6';
 
-const ArticlesSection = () => {
-  const [hoverIndex, setHoverIndex] = useState(null);
+const ArticlesSection: React.FC = () => {
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   const articles = [
     {
-      title: "Troubleshooting TTY Issues",
+      title: "Troubleshooting TTY1 issue and Creating a Bootable Drive",
       description: "Deep dive into terminal interface debugging techniques",
+      link: "https://blog.mahansigdel.com.np/troubleshooting-tty1-issue-and-creating-a-bootable-drive",
       asciiArt: `
- _____
-|_   _|___ ___ 
-  | | |_ -|_ -|
-  |_| |___|___|
+░▀▀█░▀█▀
+░░▒█░░█░
+░▀▀▀░▀▀▀
       `
     },
     {
-      title: "Creating Bootable Media",
-      description: "Step-by-step guide to reliable boot drive creation",
+      title: "Remote Access for Linux from your Android/iOS",
+      description: "Step-by-step guide to reliable remote access setup",
+      link: "https://blog.mahansigdel.com.np/remote-access-for-linux",
       asciiArt: `
-  ___ ___ ___ 
- | . | . | . |
- |_  |_  |___|
- |___|___|    
+░▒█▀░▒█▀
+░░▀▄░▀▄░
+░▀▀░░▀▀░
       `
     },
-    {
-      title: "Network Security Protocols",
-      description: "Understanding modern encryption standards",
-      asciiArt: `
- ___ ___ ___ 
-|   |  _|_ -|
-| | |_| |___|
-|___|___|    
-      `
-    },
-    {
-      title: "File System Architecture",
-      description: "Low-level exploration of storage systems",
-      asciiArt: `
- ___ ___ ___ 
-|  _|   |_ -|
-|_| |_|_|___|
-      `
-    }
   ];
 
   const textColor = { color: '#256B2D' };
@@ -54,10 +36,14 @@ const ArticlesSection = () => {
       <div className="flex flex-col gap-4">
         {articles.map((article, index) => {
           const isHovered = hoverIndex === index;
+          const isClient = typeof window !== 'undefined';
           
           return (
-            <div
+            <a
               key={index}
+              href={article.link}
+              target="_blank"
+              rel="noopener noreferrer"
               className={`flex items-center justify-between p-3 rounded-md border border-opacity-10 transition-all duration-300 ${
                 isHovered ? 'border-green-700 shadow-md bg-green-900 bg-opacity-15' : 'border-green-900 hover:bg-green-900 hover:bg-opacity-10'
               }`}
@@ -65,19 +51,17 @@ const ArticlesSection = () => {
               onMouseLeave={() => setHoverIndex(null)}
             >
               <div className="flex items-center gap-3">
-                <div 
-                  className="ascii-container hidden md:block"
-                >
+                <div className="ascii-container hidden md:block">
                   <pre style={{
-                    ...(isHovered ? hoverTextColor : textColor), 
-                    fontSize: '0.6rem', 
-                    lineHeight: '0.8rem'
+                    ...(isHovered ? hoverTextColor : textColor),
+                    fontSize: '0.5rem',
+                    lineHeight: '0.7rem'
                   }}>
                     {article.asciiArt}
                   </pre>
                 </div>
                 <div>
-                  <h3 
+                  <h3
                     className={`text-sm font-bold transition-all duration-300 ${
                       isHovered ? 'scale-105' : ''
                     }`}
@@ -85,21 +69,21 @@ const ArticlesSection = () => {
                   >
                     {article.title}
                   </h3>
-                  
                   {/* Description - shown on hover for desktop, always hidden on mobile */}
-                  <div 
-                    className={`overflow-hidden transition-all duration-300 ${
-                      window.innerWidth >= 768 && isHovered ? 'max-h-16 opacity-100 mt-1' : 'max-h-0 opacity-0'
-                    }`}
-                  >
-                    <p
-                      className="text-xs"
-                      style={{ ...(isHovered ? hoverTextColor : textColor), opacity: 0.9 }}
+                  {isClient && (
+                    <div
+                      className={`overflow-hidden transition-all duration-300 ${
+                        window.innerWidth >= 768 && isHovered ? 'max-h-16 opacity-100 mt-1' : 'max-h-0 opacity-0'
+                      }`}
                     >
-                      {article.description}
-                    </p>
-                  </div>
-                  
+                      <p
+                        className="text-xs"
+                        style={{ ...(isHovered ? hoverTextColor : textColor), opacity: 0.9 }}
+                      >
+                        {article.description}
+                      </p>
+                    </div>
+                  )}
                   {/* Always visible description on mobile - hidden on desktop */}
                   <p
                     className="text-xs block md:hidden"
@@ -109,13 +93,12 @@ const ArticlesSection = () => {
                   </p>
                 </div>
               </div>
-              <span 
+              <FaArrowRight
                 className={`transform transition-all duration-300 ${isHovered ? 'translate-x-1 -translate-y-1' : ''}`}
                 style={isHovered ? hoverTextColor : textColor}
-              >
-                ➚
-              </span>
-            </div>
+                size={14}
+              />
+            </a>
           );
         })}
       </div>
