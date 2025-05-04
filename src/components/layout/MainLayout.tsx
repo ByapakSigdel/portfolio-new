@@ -2,10 +2,19 @@
 
 import { useState, useEffect, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import { Jost } from 'next/font/google';
 import HeroSection from '../sections/HeroSection';
 import ProjectsSection from '../sections/ProjectsSection';
 import ArticlesSection from '../sections/ArticlesSection';
 import GraphsSection from '../sections/GraphsSection';
+
+// Initialize Jost font
+const jost = Jost({
+  subsets: ['latin'],
+  display: 'swap',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-jost',
+});
 
 interface BorderSectionProps {
   title: string;
@@ -117,9 +126,17 @@ export default function MainLayout() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-[#256B2D] overflow-x-hidden">
+    <div className={`${jost.className} min-h-screen bg-black text-[#256B2D] overflow-x-hidden`}>
       {/* Custom Scrollbar Styles */}
       <style jsx global>{`
+        :root {
+          --font-jost: ${jost.style.fontFamily};
+        }
+        
+        html {
+          font-family: var(--font-jost);
+        }
+        
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
           background-color: #000000;
