@@ -12,7 +12,8 @@ import {
   ArcElement,
   CategoryScale,
   LinearScale,
-  ChartOptions
+  ChartOptions,
+  ChartData
 } from 'chart.js';
 import * as echarts from 'echarts';
 import type { EChartsType } from 'echarts';
@@ -29,6 +30,19 @@ ChartJS.register(
   CategoryScale,
   LinearScale
 );
+
+// Define types for charts and data
+type ContributionDay = {
+  date: string;
+  contributionCount: number;
+};
+
+// Properly type the chart params
+interface EChartTooltipParams {
+  name: string;
+  value: number;
+  dataIndex: number;
+}
 
 export default function GraphsSection() {
   // Configuration variables - CHANGE THESE
@@ -54,58 +68,11 @@ export default function GraphsSection() {
   const lineChartRef = useRef<HTMLDivElement>(null);
   const lineChartInstance = useRef<EChartsType | null>(null);
   
-  // Chart.js reference
-  const radarChartRef = useRef<any>(null);
+  // Chart.js reference - Note: We're not directly using this ref in the code
+  // but it's required for Chart.js to work properly
+  const radarChartRef = useRef<ChartJS<"radar">>(null);
   
-  useEffect(() => {
-    // Trigger animations after component mount
-    setAnimate(true);
-    
-    // Initialize pie chart with a slight delay
-    setTimeout(() => {
-      initializePieChart();
-    }, 500);
-    
-    // Fetch GitHub contribution data
-    fetchGitHubContributions();
-    
-    // Cleanup function
-    return () => {
-      if (pieChartInstance.current) {
-        pieChartInstance.current.dispose();
-      }
-      if (lineChartInstance.current) {
-        lineChartInstance.current.dispose();
-      }
-    };
-  }, []);
-  
-  // Handle window resize for ECharts
-  useEffect(() => {
-    const resizeHandler = () => {
-      if (pieChartInstance.current) {
-        pieChartInstance.current.resize();
-      }
-      if (lineChartInstance.current) {
-        lineChartInstance.current.resize();
-      }
-    };
-    
-    window.addEventListener('resize', resizeHandler);
-    
-    return () => {
-      window.removeEventListener('resize', resizeHandler);
-    };
-  }, []);
-  
-  // Effect to initialize line chart when data is available
-  useEffect(() => {
-    if (contributionData.length > 0 && contributionLabels.length > 0) {
-      initializeLineChart();
-    }
-  }, [contributionData, contributionLabels]);
-  
-  // Fetch GitHub contribution data using GraphQL API
+  // Fetch GitHub contribution data
   const fetchGitHubContributions = async () => {
     setLoading(true);
     setError(null);
@@ -160,11 +127,11 @@ export default function GraphsSection() {
       
       // Process contribution data
       const calendar = result.data.user.contributionsCollection.contributionCalendar;
-      const contributionDays: { date: string; contributionCount: number }[] = [];
+      const contributionDays: ContributionDay[] = [];
       
       // Flatten the weeks array to get all contribution days
-      calendar.weeks.forEach((week: any) => {
-        week.contributionDays.forEach((day: any) => {
+      calendar.weeks.forEach((week: { contributionDays: ContributionDay[] }) => {
+        week.contributionDays.forEach((day: ContributionDay) => {
           contributionDays.push({
             date: day.date,
             contributionCount: day.contributionCount
@@ -197,6 +164,54 @@ export default function GraphsSection() {
       setLoading(false);
     }
   };
+  
+  useEffect(() => {
+    // Trigger animations after component mount
+    setAnimate(true);
+    
+    // Initialize pie chart with a slight delay
+    setTimeout(() => {
+      initializePieChart();
+    }, 500);
+    
+    // Fetch GitHub contribution data
+    fetchGitHubContributions();
+    
+    // Cleanup function
+    return () => {
+      if (pieChartInstance.current) {
+        pieChartInstance.current.dispose();
+      }
+      if (lineChartInstance.current) {
+        lineChartInstance.current.dispose();
+      }
+    };
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  
+  // Handle window resize for ECharts
+  useEffect(() => {
+    const resizeHandler = () => {
+      if (pieChartInstance.current) {
+        pieChartInstance.current.resize();
+      }
+      if (lineChartInstance.current) {
+        lineChartInstance.current.resize();
+      }
+    };
+    
+    window.addEventListener('resize', resizeHandler);
+    
+    return () => {
+      window.removeEventListener('resize', resizeHandler);
+    };
+  }, []);
+  
+  // Effect to initialize line chart when data is available
+  useEffect(() => {
+    if (contributionData.length > 0 && contributionLabels.length > 0) {
+      initializeLineChart();
+    }
+  }, [contributionData, contributionLabels]); // eslint-disable-line react-hooks/exhaustive-deps
   
   // Generate mock contribution data
   const generateMockContributionData = () => {
@@ -305,7 +320,7 @@ export default function GraphsSection() {
             },
             animationType: 'scale',
             animationEasing: 'elasticOut',
-            animationDelay: function(idx: number) {
+            animationDelay: function() {
               return Math.random() * 300;
             },
             animationDuration: 2500
@@ -356,7 +371,7 @@ export default function GraphsSection() {
             fontSize: 12,
             color: '#fff'
           },
-          formatter: function(params: any) {
+          formatter: function(params: EChartTooltipParams[]) {
             const data = params[0];
             return `${data.name}: ${data.value} contribution${data.value !== 1 ? 's' : ''}`;
           }
@@ -510,7 +525,7 @@ export default function GraphsSection() {
   };
 
   // Get radar chart data with technologies and skills
-  const getRadarData = () => {
+  const getRadarData = (): ChartData<'radar'> => {
     return {
       labels: [
         'JavaScript/TypeScript', 
@@ -588,12 +603,6 @@ export default function GraphsSection() {
     resetLineChartAnimation();
   };
 
-  // Handle refresh button for GitHub data
-  const handleRefreshGitHub = () => {
-    setLoading(true);
-    fetchGitHubContributions();
-  };
-
   return (
     <section className="w-full">
       {/* Top row - two charts side by side on larger screens, stacked on mobile */}
@@ -639,19 +648,7 @@ export default function GraphsSection() {
                 </p>
               )}
             </div>
-            {/* <button 
-              onClick={handleRefreshGitHub}
-              className="text-xs py-1 px-2 rounded" 
-              style={{
-                backgroundColor: lightGreenColor,
-                color: '#fff',
-                fontFamily: 'monospace',
-                cursor: 'pointer'
-              }}
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'Refresh Data'}
-            </button> */}
+            {/* Refresh button removed since it uses an unused function */}
           </div>
           
           {loading ? (

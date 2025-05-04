@@ -129,7 +129,7 @@ const HeroSection = () => {
     // Set random riddle
     const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
     setCurrentRiddle(`${randomRiddle}`);
-  }, []);
+  }, [quotes, riddles]); // Added missing dependencies
 
   return (
     <div className="relative w-full">
@@ -140,8 +140,8 @@ const HeroSection = () => {
           style={{
             textShadow: '0 0 6px rgba(37, 107, 45, 0.4), 0 0 10px rgba(37, 107, 45, 0.3)',
             fontFamily: '"Courier New", monospace',
-            fontSize: '4px',  /* Increased from 3.5px to 4px */
-            lineHeight: '4.5px',  /* Increased from 4px to 4.5px */
+            fontSize: '4px',
+            lineHeight: '4.5px',
             letterSpacing: '0px',
             display: 'block',
             overflow: 'visible'
@@ -159,41 +159,39 @@ const HeroSection = () => {
             initial="initial"
           >
             <div className="flex flex-col items-center md:items-start text-center md:text-left">
-              <h1 className="text-4xl md:text-3xl bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent font-medium">
+              <h1 className="text-4xl md:text-3xl bg-gradient-to-r from-green-700 to-green-500 bg-clip-text text-transparent">
                 mahan sigdel
               </h1>
               <p className="mt-3 text-xl md:text-base text-green-600 w-full">
                 an engineer who loves tinkering with software or hardware.
               </p>
               <p className="mt-3 text-xl md:text-base text-green-600 w-full">
-  contact me at my <a href="mailto:sigdelmb123@gmail.com" className="text-blue-800 hover:text-blue-800">mail</a> or my <a href="https://www.linkedin.com/in/mahansigdel" target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:text-blue-800">linkedin</a>.
-</p>
-
-
+                contact me at my <a href="mailto:sigdelmb123@gmail.com" className="text-blue-800 hover:text-blue-800">mail</a> or my <a href="https://www.linkedin.com/in/mahansigdel" target="_blank" rel="noopener noreferrer" className="text-blue-800 hover:text-blue-800">linkedin</a>.
+              </p>
               
-              {/* Quote */}
+              {/* Quote - Fixed unescaped entities */}
               <p className="mt-3 text-xs md:text-xs italic text-green-700 opacity-80 w-full md:text-left text-center">
-                "{quote}"
+                &ldquo;{quote}&rdquo;
               </p>
             </div>
           </motion.div>
           
           {/* Moving Banner - Green background with black text */}
-          <div className="relative w-full overflow-hidden h-7 bg-green-700"> {/* Increased height from h-6 to h-7 */}
+          <div className="relative w-full overflow-hidden h-7 bg-green-700">
             <motion.div
               className="absolute whitespace-nowrap flex items-center h-full"
               variants={bannerVariants}
               animate="animate"
             >
               <div className="flex items-center">
-                <span className="text-sm text-black font-mono">{currentRiddle}</span> {/* Increased from text-xs to text-sm */}
+                <span className="text-sm text-black font-mono">{currentRiddle}</span>
                 <span className="mx-6 text-black opacity-70">•</span>
               </div>
               
               {/* Duplicate riddle to create seamless loop */}
               {Array(10).fill(0).map((_, i) => (
                 <div key={i} className="flex items-center">
-                  <span className="text-sm text-black font-mono">{currentRiddle}</span> {/* Increased from text-xs to text-sm */}
+                  <span className="text-sm text-black font-mono">{currentRiddle}</span>
                   <span className="mx-6 text-black opacity-70">•</span>
                 </div>
               ))}
@@ -202,27 +200,27 @@ const HeroSection = () => {
           
           {/* Icons Section - No bottom border and no right border */}
           <motion.div
-            className="relative border-l border-t border-solid p-5 w-full" /* Increased padding from p-4 to p-5 */
+            className="relative border-l border-t border-solid p-5 w-full"
             variants={sectionVariants}
             whileHover="hover"
             initial="initial"
           >
             {/* Icons Only */}
-            <div className="flex justify-center md:justify-evenly space-x-10"> {/* Increased space-x-8 to space-x-10 */}
+            <div className="flex justify-center md:justify-evenly space-x-10">
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Music size={20} className="text-green-600" /> {/* Increased size from 20 to 24 */}
+                <Music size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Film size={20} className="text-green-600" /> {/* Increased size from 20 to 24 */}
+                <Film size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Image size={20} className="text-green-600" /> {/* Increased size from 20 to 24 */}
+                <Image size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <BookOpen size={20} className="text-green-600" /> {/* Increased size from 20 to 24 */}
+                <BookOpen size={20} className="text-green-600" />
               </motion.div>
               <motion.div whileHover={{ scale: 1.2 }} className="cursor-pointer">
-                <Sparkles size={20} className="text-green-600" /> {/* Increased size from 20 to 24 */}
+                <Sparkles size={20} className="text-green-600" />
               </motion.div>
             </div>
           </motion.div>
