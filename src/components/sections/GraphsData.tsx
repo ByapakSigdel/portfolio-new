@@ -484,26 +484,26 @@ export const useGraphsData = (): GraphsDataHook => {
   // Enhanced radar chart options with smoother animations
   const skillsOptions: ChartOptions<'radar'> = {
     ...commonOptions,
-    animation: {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  animation: ({
       duration: 1200, // Slightly faster than before
       easing: 'easeInOutQuart' as const, // Smoother easing
-      animateRotate: true,
-      animateScale: true,
-      onProgress: function(animation) {
+      onProgress: function(animation: any) {
         // Add subtle scale effect during animation
         const progress = animation.currentStep / animation.numSteps;
         const scale = 0.95 + (progress * 0.05); // Scale from 0.95 to 1.0
-        if (this.canvas) {
-          this.canvas.style.transform = `scale(${scale})`;
+        if ((this as any).canvas) {
+          (this as any).canvas.style.transform = `scale(${scale})`;
         }
       },
       onComplete: function() {
         // Reset scale after animation
-        if (this.canvas) {
-          this.canvas.style.transform = 'scale(1)';
+        if ((this as any).canvas) {
+          (this as any).canvas.style.transform = 'scale(1)';
         }
       }
-    },
+  } as any),
+  /* eslint-enable @typescript-eslint/no-explicit-any */
     interaction: {
       intersect: false,
       mode: 'nearest'
