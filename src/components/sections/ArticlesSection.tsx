@@ -26,6 +26,16 @@ const ArticlesSection: React.FC = () => {
 ░▀▀░░▀▀░
       `
     },
+    {
+      title: "Just me, Python and a Discord bot that wouldn't listen",
+      description: "A personal story and debugging journey building a Discord bot with Python",
+      link: "https://blog.mahansigdel.com.np/just-me-python-and-a-discord-bot-that-wouldnt-listen",
+      asciiArt: `
+ ░█▀█░█▀█░
+ ░█░█░█░█░
+ ░▀░▀░▀▀▀░
+      `
+    },
   ];
 
   const textColor = { color: '#256B2D' };
