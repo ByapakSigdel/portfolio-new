@@ -59,29 +59,34 @@ const glowVariants = {
 
 export default function MainLayout() {
   const [windowWidth, setWindowWidth] = useState(0);
+  const [mounted, setMounted] = useState(false);
   
   useEffect(() => {
     setWindowWidth(window.innerWidth);
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize);
+    // mark mounted to avoid SSR/client layout mismatch
+    setMounted(true);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
   
-  // Breakpoints
-  const isSmallPhone = windowWidth <= 480;
-  const isMobile = windowWidth <= 767;
-  const isTablet = windowWidth > 767 && windowWidth <= 1024;
-  const isDesktop = windowWidth > 1024;
+  // Breakpoints - only evaluate after mount to avoid hydration mismatches
+  const safeWidth = mounted ? windowWidth : 1200; // assume desktop on server
+  const isSmallPhone = safeWidth <= 480;
+  const isMobile = safeWidth <= 767;
+  const isTablet = safeWidth > 767 && safeWidth <= 1024;
+  const isDesktop = safeWidth > 1024;
 
   const BorderSection = ({ title, children, className = "", noPadding = false, fixedHeight = false, height = "400px" }: BorderSectionProps) => (
     <motion.div
-      className={`relative border ${noPadding ? 'p-0' : 'p-3 md:p-4'} ${className}`}
+      className={`relative ${noPadding ? 'p-0' : 'p-3 md:p-4'} ${className}`}
       variants={sectionVariants}
       whileHover="hover"
       initial="initial"
       style={{ 
         borderStyle: 'solid',
-        height: fixedHeight ? height : 'auto'
+        height: fixedHeight ? height : 'auto',
+        borderColor: 'var(--border-soft)'
       }}
     >
       {/* Border Glow Effect */}
@@ -96,7 +101,7 @@ export default function MainLayout() {
       </motion.div>
       
       <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
-        <span className="text-sm md:text-base text-[#256B2D] font-bold">{title}</span>
+        <span className="text-sm md:text-base font-bold" style={{ color: 'var(--accent-strong)' }}>{title}</span>
       </div>
       
       <div 
@@ -126,13 +131,22 @@ export default function MainLayout() {
   };
 
   return (
-    <div className={`${jost.className} min-h-screen bg-black text-[#256B2D] overflow-x-hidden`}>
+    <div className={`${jost.className} min-h-screen bg-black overflow-x-hidden`} style={{ color: 'var(--accent-strong)' }}>
       {/* Custom Scrollbar Styles */}
       <style jsx global>{`
         :root {
           --font-jost: ${jost.style.fontFamily};
+          --accent-rgb: 37,107,45;
+          --accent: rgba(var(--accent-rgb), 1);
+          --accent-strong: rgba(var(--accent-rgb), 0.95);
+          --accent-medium: rgba(var(--accent-rgb), 0.85);
+          --accent-soft: rgba(var(--accent-rgb), 0.15);
+          --border-strong: rgba(var(--accent-rgb), 0.38);
+          --border-soft: rgba(var(--accent-rgb), 0.15);
+          --bg-banner: rgba(var(--accent-rgb), 0.12);
+          --chart-area-alpha: 0.18;
         }
-        
+
         html {
           font-family: var(--font-jost);
         }
@@ -260,10 +274,11 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
         onClick={() => setIsOpen(!isOpen)}
       >
         <motion.span 
-          className="text-[#256B2D] text-xs"
+          className="text-xs"
           whileHover={{ scale: 1.05 }}
+          style={{ color: 'var(--accent-strong)' }}
         >
-          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-xs opacity-70">tap to expand</span>}
+          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-xs" style={{ color: 'rgba(37,107,45,0.7)' }}>tap to expand</span>}
         </motion.span>
       </div>
       
@@ -274,9 +289,9 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
         className="overflow-hidden custom-scrollbar"
       >
         {isOpen ? children : (
-          <div className="h-8 flex items-center justify-center">
-            <span className="text-[#256B2D] opacity-50 text-xs">Content collapsed</span>
-          </div>
+            <div className="h-8 flex items-center justify-center">
+            <span className="text-xs" style={{ color: 'rgba(37,107,45,0.5)' }}>Content collapsed</span>
+            </div>
         )}
       </motion.div>
     </motion.div>

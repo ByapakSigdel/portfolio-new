@@ -92,14 +92,18 @@ const ProjectsSection: React.FC = () => {
           return (
             <div
               key={index}
-              className={`rounded-md border border-opacity-10 transition-all duration-300 ${
-                isHovered ? 'border-green-700 shadow-md' : 'border-green-900'
-              }`}
+              className={`rounded-md transition-all duration-300 ${isHovered ? 'shadow-md' : ''}`}
+              style={{
+                borderStyle: 'solid',
+                borderWidth: 1,
+                borderColor: isHovered ? 'rgba(37,107,45,0.7)' : 'rgba(37,107,45,0.15)'
+              }}
             >
               <div 
-                className={`flex items-center justify-between p-3 group cursor-pointer transition-all duration-300 ${
-                  isHovered ? 'bg-green-900 bg-opacity-15' : 'hover:bg-green-900 hover:bg-opacity-10'
-                }`}
+                className={`flex items-center justify-between p-3 group cursor-pointer transition-all duration-300`}
+                style={{
+                  backgroundColor: isHovered ? 'rgba(37,107,45,0.15)' : undefined
+                }}
                 onClick={() => toggleExpand(index)}
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
@@ -142,10 +146,15 @@ const ProjectsSection: React.FC = () => {
               </div>
               
               <div 
-                className={`transition-all duration-300 overflow-hidden ${
-                  isExpanded ? 'max-h-48 p-3 bg-green-900 bg-opacity-5' : 'max-h-0 p-0'
-                } ${isHovered ? 'bg-green-900 bg-opacity-8' : 'bg-green-900 bg-opacity-5'}`}
+                className={`transition-all duration-300 overflow-hidden ${isExpanded ? 'max-h-48 p-3' : 'max-h-0 p-0'}`}
                 onMouseEnter={() => setHoverIndex(index)}
+                style={{
+                  backgroundColor: isExpanded
+                    ? 'rgba(37,107,45,0.05)'
+                    : isHovered
+                    ? 'rgba(37,107,45,0.08)'
+                    : 'rgba(37,107,45,0.05)'
+                }}
               >
                 <p className="text-xs mb-3" style={{...textColor, opacity: 0.9}}>
                   {project.extendedDescription}

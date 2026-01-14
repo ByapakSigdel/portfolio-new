@@ -1,7 +1,9 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Music, Film, Image, BookOpen, Sparkles } from 'lucide-react';
+import { Music, Film, Image as ImageIcon, BookOpen, Heart } from 'lucide-react';
+// import { createClient } from '@supabase/supabase-js'; // Removed unused
 
 // Move arrays outside component to prevent recreation on each render
 const quotes = [
@@ -56,7 +58,7 @@ const HeroSection = () => {
                        █████████▓▓▓███▓██▓▓▓▓▓███▓▓██▓██▓▓▓▓▓▓▓▓▓▓▓▓█████▓▓██                       
                        █████████▓▓▓███▓▓▓▓▓▒▒▒███▒▒▓▓▓███▓▓▓▓▓▓▓▓▓▓██████▓█▓▓█                      
                         ████████▒▒▒███▒▒▒▒▒▒▒▒███▒▒▒▒▓███▓▓▓▓▓██▓▓▓████████▓▓█                      
-                        ████████▒▒▒███▒▒▒▒▒▒▒▒███▒▒▒▒▓███▓▓█▓▓▓▓▓▓████████▓▓█                      
+                        ████████▒▒▒███▒▒▒▒▒▒▒▒███▒▒▒▒▓███▓▓█▓▓▓▓▓████████▓▓█                      
                           ██████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓▓█▓▓▓▓▓███████████████                       
                           ██████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓▓█▓▓██▓▓▓█████████████                       
                           ██████▓▓▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▓███▓▓▓▓▓█████████████                         
@@ -74,7 +76,7 @@ const HeroSection = () => {
                                ███████▓░█▓▓░░░░░▓█▓▓▓▓██▓█████▓▓▓▓▓▓▓▓▓▓█████▓▓█                    
                                ███████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓█▓▓▓▓▓▓▓▓█████▓▓███▓                
                              █████████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓▓▓▓▓▓▓▓▓▓███████▓▓███               
-                             █████████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓▓▓▓▓▓▓▓▓▓▓▓██████████               
+                             █████████▓░█▓▓░░░░░▓█░▒▓▓████████▓▓▓▓▓▓▓▓▓▓▓▓██████████               
                              █████████▓░█▓▓░░░░░▓█░▒█▓▓▓████████▓▓▓▓▓▓▓▓█▓▓█████████                
                            ███████████▓░█▓▓░░░░░▓█░▒█▓██████████▓▓▓▓▓▓▓▓▓▓▓███████                  
                            ██████████▓▓░█▓▓░░░░░▓█░▒█▓▓▓▓███████████▓▓▓▓▓▓▓█████                    
@@ -93,6 +95,7 @@ const HeroSection = () => {
   const [quote, setQuote] = useState('');
   const [currentRiddle, setCurrentRiddle] = useState('');
   const [isClient, setIsClient] = useState(false);
+  const [suggestions, setSuggestions] = useState<Record<string, string | null>>({});
   
   // Modified section variants - only border color change, no scale
   const sectionVariants = {
@@ -132,8 +135,46 @@ const HeroSection = () => {
     
     // Set random riddle
     const randomRiddle = riddles[Math.floor(Math.random() * riddles.length)];
-    setCurrentRiddle(`${randomRiddle}`);
+    setCurrentRiddle(randomRiddle);
+
+    // Fetch recommendations safely
+    const fetchSuggestions = async () => {
+        const categoryMap: Record<string, string> = {
+          'music': 'song',
+          'movie': 'movie',
+          'image': 'image',
+          'book': 'book',
+          'misc': 'misc'
+        };
+        const kinds = Object.keys(categoryMap);
+        const out: Record<string, string | null> = {};
+        
+        await Promise.all(kinds.map(async (k) => {
+          try {
+            const dbColumn = categoryMap[k];
+            const res = await fetch(`/api/recommendation?kind=${encodeURIComponent(dbColumn)}`);
+            if (res.ok) {
+              const json = await res.json();
+              out[k] = json.link || null;
+            } else {
+              out[k] = null;
+            }
+          } catch {
+            out[k] = null;
+          }
+        }));
+        setSuggestions(out);
+    };
+
+    fetchSuggestions();
   }, []);
+
+  const handleClick = (kind: string) => {
+    const link = suggestions[kind];
+    if (link) {
+      window.open(link, '_blank');
+    }
+  };
 
   return (
     <div className="relative w-full">
@@ -244,7 +285,7 @@ const HeroSection = () => {
             </motion.div>
             
             {/* Moving Banner - smaller height */}
-            <div className="relative w-full overflow-hidden h-8 bg-green-700 border-b border-[rgba(174,174,174,0.15)]">
+            <div className="relative w-full overflow-hidden h-8 bg-transparent border-b border-[rgba(174,174,174,0.15)]">
               {isClient && currentRiddle && (
                 <motion.div
                   className="absolute whitespace-nowrap flex items-center h-full"
@@ -252,15 +293,15 @@ const HeroSection = () => {
                   animate="animate"
                 >
                   <div className="flex items-center">
-                    <span className="text-xs text-black font-mono tracking-wider px-3">{currentRiddle}</span>
-                    <span className="mx-6 text-black opacity-70">•</span>
+                    <span className="text-xs text-[#256B2D] font-mono tracking-wider px-3">{currentRiddle}</span>
+                    <span className="mx-6 text-[#256B2D] opacity-70">•</span>
                   </div>
                   
                   {/* Duplicate riddle to create seamless loop */}
                   {Array(10).fill(0).map((_, i) => (
                     <div key={i} className="flex items-center">
-                      <span className="text-xs text-black font-mono tracking-wider px-3">{currentRiddle}</span>
-                      <span className="mx-6 text-black opacity-70">•</span>
+                      <span className="text-xs text-[#256B2D] font-mono tracking-wider px-3">{currentRiddle}</span>
+                      <span className="mx-6 text-[#256B2D] opacity-70">•</span>
                     </div>
                   ))}
                 </motion.div>
@@ -270,10 +311,10 @@ const HeroSection = () => {
               {!isClient && (
                 <div className="absolute whitespace-nowrap flex items-center h-full">
                   <div className="flex items-center">
-                    <span className="text-xs text-black font-mono tracking-wider px-3">
+                    <span className="text-xs text-[#256B2D] font-mono tracking-wider px-3">
                       ... ..- -... ... -.-. .-. .. -... . / - --- / -.-. .... .. -.-- .- -....- .--. --- .--. / --. ..- ..-. ..-
                     </span>
-                    <span className="mx-6 text-black opacity-70">•</span>
+                    <span className="mx-6 text-[#256B2D] opacity-70">•</span>
                   </div>
                 </div>
               )}
@@ -290,32 +331,37 @@ const HeroSection = () => {
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
                   className="cursor-pointer transition-all duration-200 hover:text-green-700 p-1"
+                  onClick={() => handleClick('music')}
                 >
                   <Music size={20} className="text-green-600" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
                   className="cursor-pointer transition-all duration-200 hover:text-green-700 p-1"
+                  onClick={() => handleClick('movie')}
                 >
                   <Film size={20} className="text-green-600" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
                   className="cursor-pointer transition-all duration-200 hover:text-green-700 p-1"
+                  onClick={() => handleClick('image')}
                 >
-                  <Image size={20} className="text-green-600" />
+                  <ImageIcon size={20} className="text-green-600" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
                   className="cursor-pointer transition-all duration-200 hover:text-green-700 p-1"
+                   onClick={() => handleClick('book')}
                 >
                   <BookOpen size={20} className="text-green-600" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
                   className="cursor-pointer transition-all duration-200 hover:text-green-700 p-1"
+                  onClick={() => handleClick('misc')}
                 >
-                  <Sparkles size={20} className="text-green-600" />
+                  <Heart size={20} className="text-green-600" />
                 </motion.div>
               </div>
             </motion.div>

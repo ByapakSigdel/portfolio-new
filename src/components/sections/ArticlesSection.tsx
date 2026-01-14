@@ -46,7 +46,6 @@ const ArticlesSection: React.FC = () => {
       <div className="flex flex-col gap-4">
         {articles.map((article, index) => {
           const isHovered = hoverIndex === index;
-          const isClient = typeof window !== 'undefined';
           
           return (
             <a
@@ -54,11 +53,15 @@ const ArticlesSection: React.FC = () => {
               href={article.link}
               target="_blank"
               rel="noopener noreferrer"
-              className={`flex items-center justify-between p-3 rounded-md border border-opacity-10 transition-all duration-300 ${
-                isHovered ? 'border-green-700 shadow-md bg-green-900 bg-opacity-15' : 'border-green-900 hover:bg-green-900 hover:bg-opacity-10'
-              }`}
+              className={`flex items-center justify-between p-3 rounded-md transition-all duration-300 ${isHovered ? 'shadow-md' : ''}`}
               onMouseEnter={() => setHoverIndex(index)}
               onMouseLeave={() => setHoverIndex(null)}
+              style={{
+                borderStyle: 'solid',
+                borderWidth: 1,
+                borderColor: isHovered ? 'rgba(37,107,45,0.7)' : 'rgba(37,107,45,0.15)',
+                backgroundColor: isHovered ? 'rgba(37,107,45,0.15)' : undefined
+              }}
             >
               <div className="flex items-center gap-3">
                 <div className="ascii-container hidden md:block">
@@ -80,20 +83,18 @@ const ArticlesSection: React.FC = () => {
                     {article.title}
                   </h3>
                   {/* Description - shown on hover for desktop, always hidden on mobile */}
-                  {isClient && (
-                    <div
-                      className={`overflow-hidden transition-all duration-300 ${
-                        window.innerWidth >= 768 && isHovered ? 'max-h-16 opacity-100 mt-1' : 'max-h-0 opacity-0'
-                      }`}
+                  <div
+                    className={`hidden md:block overflow-hidden transition-all duration-300 ${
+                      isHovered ? 'max-h-16 opacity-100 mt-1' : 'max-h-0 opacity-0'
+                    }`}
+                  >
+                    <p
+                      className="text-xs"
+                      style={{ ...(isHovered ? hoverTextColor : textColor), opacity: 0.9 }}
                     >
-                      <p
-                        className="text-xs"
-                        style={{ ...(isHovered ? hoverTextColor : textColor), opacity: 0.9 }}
-                      >
-                        {article.description}
-                      </p>
-                    </div>
-                  )}
+                      {article.description}
+                    </p>
+                  </div>
                   {/* Always visible description on mobile - hidden on desktop */}
                   <p
                     className="text-xs block md:hidden"
