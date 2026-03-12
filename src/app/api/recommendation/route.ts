@@ -1,23 +1,31 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = process.env.SUPABASE_URL as string;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY as string;
+let supabase: ReturnType<typeof createClient> | null = null;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  // keep this file syntactically valid on client machines without env set
-  console.warn('Supabase URL or service key not provided; /api/recommendation will return an error.');
+function getSupabase() {
+  if (supabase) return supabase;
+  const url = process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_KEY;
+  if (!url || !key) {
+    return null;
+  }
+  supabase = createClient(url, key);
+  return supabase;
 }
-
-const supabase = createClient(SUPABASE_URL ?? '', SUPABASE_SERVICE_KEY ?? '');
 
 export async function GET(req: Request) {
   try {
+    const sb = getSupabase();
+    if (!sb) {
+      return NextResponse.json({ error: 'Supabase not configured' }, { status: 503 });
+    }
+
     const url = new URL(req.url);
     const kind = (url.searchParams.get('kind') || 'movie').toLowerCase();
     // call RPC get_random_link (preferred)
     try {
-      const { data, error } = await supabase.rpc('get_random_link', { p_kind: kind });
+      const { data, error } = await (sb.rpc as Function)('get_random_link', { p_kind: kind });
       if (!error && data) {
         const link = Array.isArray(data) ? data[0] : data;
         return NextResponse.json({ link });
@@ -30,7 +38,7 @@ export async function GET(req: Request) {
     // Fallback: select rows from `recommendations` and pick a random non-empty value
     const column = kind; // expecting column names like 'movie', 'image', 'book', 'misc'
     try {
-      const { data, error: selErr } = await supabase
+      const { data, error: selErr } = await sb
         .from('recommendations')
         .select(column)
         .limit(1000);
