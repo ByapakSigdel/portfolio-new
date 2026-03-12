@@ -205,26 +205,26 @@ const HeroSection = () => {
             </pre>
           </div>
 
-          {/* Mobile ASCII Art - hidden on mobile for space */}
-          <div className="flex-shrink-0 flex md:hidden items-center justify-center border-b border-[rgba(174,174,174,0.15)] p-3">
+          {/* Mobile ASCII Art */}
+          <div className="flex-shrink-0 flex md:hidden items-center justify-center border-b border-[rgba(174,174,174,0.15)] overflow-hidden" style={{ height: '160px' }}>
             <pre
               className="text-[#256B2D] font-mono whitespace-pre select-none"
               style={{
                 fontFamily: '"Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace',
-                fontSize: '3px',
-                lineHeight: '3px',
-                letterSpacing: '-0.05px',
+                fontSize: '5px',
+                lineHeight: '5px',
+                letterSpacing: '-0.1px',
                 textRendering: 'geometricPrecision',
                 fontWeight: '600',
-                textShadow: '0 0 3px rgba(37, 107, 45, 0.4)',
-                filter: 'contrast(1.5) brightness(1.2)',
+                filter: 'contrast(1.4) brightness(1.15)',
                 margin: 0,
                 padding: 0,
                 maxWidth: 'fit-content',
                 imageRendering: 'pixelated',
                 WebkitFontSmoothing: 'antialiased',
                 MozOsxFontSmoothing: 'grayscale',
-                transform: 'scale(0.7)'
+                transformOrigin: 'center center',
+                transform: 'scale(0.55)',
               }}
             >
               {asciiArt}
@@ -245,7 +245,7 @@ const HeroSection = () => {
                   mahan sigdel
                 </h1>
                 <p className="text-sm lg:text-base text-green-600 mb-2 leading-relaxed">
-                  an engineer who loves tinkering with software or hardware.
+                  an engineer who loves tinkering with software and hardware.
                 </p>
                 <p className="text-sm lg:text-base text-green-600 mb-3 leading-relaxed">
                   contact me at my{' '}
