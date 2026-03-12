@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Music, Film, Image as ImageIcon, BookOpen, Heart } from 'lucide-react';
-// import { createClient } from '@supabase/supabase-js'; // Removed unused
 
 // Move arrays outside component to prevent recreation on each render
 const quotes = [
@@ -90,7 +89,7 @@ const HeroSection = () => {
                            █████▓▓▓▓▓▓███▓▓▓░░▓▓███▓▓▓▓▓▓██▓▓███████████████████████ 
                              ██████▓▓▓███▓▓▓▓▓▓▓█████▓▓▓▓▓▓█████████████████████    
                                ██████████▓▓▓▓▓▓▓██████████████████████████████████   `;
-  
+
   // Initialize with empty values to prevent hydration mismatch
   const [quote, setQuote] = useState('');
   const [currentRiddle, setCurrentRiddle] = useState('');

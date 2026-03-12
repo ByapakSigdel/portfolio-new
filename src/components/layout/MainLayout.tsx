@@ -84,6 +84,7 @@ export default function MainLayout() {
       whileHover="hover"
       initial="initial"
       style={{ 
+        borderWidth: '1px',
         borderStyle: 'solid',
         height: fixedHeight ? height : 'auto',
         borderColor: 'var(--border-soft)'
@@ -100,7 +101,8 @@ export default function MainLayout() {
         <div className="absolute right-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#256B2D] to-transparent" />
       </motion.div>
       
-      <div className="absolute top-0 right-4 transform -translate-y-1/2 bg-black px-2">
+      {/* Title label - sits on top border with background to mask the border line */}
+      <div className="absolute top-0 right-4 -translate-y-1/2 px-2 z-10" style={{ backgroundColor: '#000000' }}>
         <span className="text-sm md:text-base font-bold" style={{ color: 'var(--accent-strong)' }}>{title}</span>
       </div>
       
