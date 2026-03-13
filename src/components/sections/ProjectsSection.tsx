@@ -18,10 +18,22 @@ const ProjectsSection: React.FC = () => {
 
   const projects = [
     {
+      title: "Derivative",
+      description: "A block coding platform for Arduino and embedded systems.",
+      extendedDescription: "Derivative is a visual block-based programming platform that lets users build Arduino and embedded systems projects without writing code. Drag-and-drop blocks generate real C/C++ code that compiles and uploads directly to hardware, making embedded development accessible to beginners and rapid for experts.",
+      web: "https://www.codeatderivative.com",
+      status: "Active" as const,
+      asciiArt: `
+░▄▀█░█▀▄
+░█▄▀░█▀▄
+      `
+    },
+    {
       title: "Virtual Mouse",
       description: "Control your computer mouse using hand gestures via OpenCV and MediaPipe.",
       extendedDescription: "A Python-based application utilizing OpenCV and MediaPipe to track hand movements, translating them into mouse controls for hands-free computer interaction.",
       github: "https://github.com/ByapakSigdel/Virtual-Mouse",
+      status: "Archived" as const,
       asciiArt: `
 ░█▒█░█▄▒▄█
 ░▀▄▀░█▒▀▒█
@@ -33,6 +45,7 @@ const ProjectsSection: React.FC = () => {
       extendedDescription: "Developed during my internship, this platform allows users to create fully functional e-commerce websites without coding, featuring product management, payment integration, and customizable templates. Hosted at shopatbanau.com.",
       github: "",
       web: "https://shopatbanau.com",
+      status: "Completed" as const,
       asciiArt: `
 ▒██▀░▄▀▀
 ░█▄▄░▀▄▄
@@ -42,6 +55,7 @@ const ProjectsSection: React.FC = () => {
       title: "NexOS",
       description: "A lightweight, Linux-based custom operating system for optimized performance.",
       extendedDescription: "NexOS is a custom-built Linux-based operating system focusing on optimized communication and efficient memory management, developed during our minor project.",
+      status: "Archived" as const,
       asciiArt: `
 ░█▄░█░▀▄▀
 ░█▒▀█░█▒█
@@ -52,7 +66,7 @@ const ProjectsSection: React.FC = () => {
       description: "A decentralized blogging application built on the Solana blockchain.",
       extendedDescription: "A decentralized application (DApp) enabling users to publish and read blogs stored on the Solana blockchain, using React.js for the frontend and integrating wallet authentication and smart contracts.",
       github: "https://github.com/ByapakSigdel/Web3-Dapp",
-      
+      status: "Archived" as const,
       asciiArt: `
 ░█░░▒█░▀██
 ░▀▄▀▄▀░▄▄█
@@ -63,7 +77,7 @@ const ProjectsSection: React.FC = () => {
       description: "An IoT device to automate pet feeding schedules with remote control.",
       extendedDescription: "An Arduino-based IoT project allowing pet owners to schedule feeding times, monitor feeding via sensors, and control dispensing remotely through a connected app, ensuring pets are fed on time even when away.",
       github: "https://github.com/ByapakSigdel/Pet-feeder",
-      
+      status: "Completed" as const,
       asciiArt: `
 ▒█▀▄▒█▀
 ░█▀▒░█▀
@@ -71,8 +85,8 @@ const ProjectsSection: React.FC = () => {
     }
   ];
   
-  const textColor = { color: '#256B2D' };
-  const hoverTextColor = { color: '#1a4d20' }; // Slightly darker green for hover effect
+  const textColor = { color: '#00E639' };
+  const hoverTextColor = { color: '#00B82E' }; // Slightly darker green for hover effect
   
   const handleLinkClick = (e: React.MouseEvent): void => {
     // Prevent the click from triggering the parent's onClick handler
@@ -96,13 +110,13 @@ const ProjectsSection: React.FC = () => {
               style={{
                 borderStyle: 'solid',
                 borderWidth: 1,
-                borderColor: isHovered ? 'rgba(37,107,45,0.7)' : 'rgba(37,107,45,0.15)'
+                borderColor: isHovered ? 'rgba(0,230,57,0.7)' : 'rgba(0,230,57,0.15)'
               }}
             >
               <div 
                 className={`flex items-center justify-between p-3 group cursor-pointer transition-all duration-300`}
                 style={{
-                  backgroundColor: isHovered ? 'rgba(37,107,45,0.15)' : undefined
+                  backgroundColor: isHovered ? 'rgba(0,230,57,0.15)' : undefined
                 }}
                 onClick={() => toggleExpand(index)}
                 onMouseEnter={() => setHoverIndex(index)}
@@ -119,14 +133,40 @@ const ProjectsSection: React.FC = () => {
                     </pre>
                   </div>
                   <div>
-                    <h3 
-                      className={`text-sm font-bold transition-all duration-300 ${
-                        isHovered ? 'scale-105' : ''
-                      }`} 
-                      style={isHovered ? hoverTextColor : textColor}
-                    >
-                      {project.title}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 
+                        className={`text-sm font-bold transition-all duration-300 ${
+                          isHovered ? 'scale-105' : ''
+                        }`} 
+                        style={isHovered ? hoverTextColor : textColor}
+                      >
+                        {project.title}
+                      </h3>
+                      <span
+                        className="text-[0.6rem] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded-sm flex items-center gap-1 leading-none font-bold"
+                        style={
+                          project.status === 'Archived'
+                            ? {
+                                color: 'rgba(255,255,255,0.4)',
+                                border: '1px solid rgba(255,255,255,0.2)',
+                                backgroundColor: 'transparent',
+                              }
+                            : project.status === 'Completed'
+                            ? {
+                                color: '#050505',
+                                border: '1px solid #A78BFA',
+                                backgroundColor: '#A78BFA',
+                              }
+                            : {
+                                color: '#050505',
+                                border: '1px solid #00E639',
+                                backgroundColor: '#00E639',
+                              }
+                        }
+                      >
+                        {project.status.toLowerCase()}
+                      </span>
+                    </div>
                     <p
                       className="text-xs transition-all duration-300"
                       style={{ 
@@ -150,10 +190,10 @@ const ProjectsSection: React.FC = () => {
                 onMouseEnter={() => setHoverIndex(index)}
                 style={{
                   backgroundColor: isExpanded
-                    ? 'rgba(37,107,45,0.05)'
+                    ? 'rgba(0,230,57,0.05)'
                     : isHovered
-                    ? 'rgba(37,107,45,0.08)'
-                    : 'rgba(37,107,45,0.05)'
+                    ? 'rgba(0,230,57,0.08)'
+                    : 'rgba(0,230,57,0.05)'
                 }}
               >
                 <p className="text-xs mb-3" style={{...textColor, opacity: 0.9}}>

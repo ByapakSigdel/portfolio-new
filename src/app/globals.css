@@ -2,52 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --terminal-green: #256B2D;
-  --terminal-black: #050505;
-  --terminal-border: 1px solid #256B2D;
-  --terminal-glow: 0 0 8px rgba(16, 185, 129, 0.4);
-}
-
 body {
-  background-color: var(--terminal-black);
-  color: var(--terminal-green);
-  font-family: 'Courier New', monospace;
+  background-color: #050505;
   line-height: 1.5;
-}
-
-/* Terminal/Console Styling */
-.terminal-text {
-  color: var(--terminal-green);
-  text-shadow: var(--terminal-glow);
-}
-
-.terminal-border {
-  border: var(--terminal-border);
-  border-radius: 4px;
-}
-
-.terminal-panel {
-  background-color: rgba(0, 10, 0, 0.7);
-  border: var(--terminal-border);
-  border-radius: 4px;
-  padding: 1rem;
-  box-shadow: var(--terminal-glow);
-}
-
-/* Terminal animation */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.cursor-blink {
-  animation: blink 1s infinite;
-}
-
-/* Terminal decorations */
-.terminal-header::before {
-  content: "> ";
 }
 
 /* ASCII art styling */
@@ -60,75 +17,8 @@ body {
   text-rendering: geometricPrecision;
 }
 
-/* Section styling */
-.section-container {
-  width: 100%;
-}
-
-.section-header {
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: var(--terminal-green);
-  text-transform: lowercase;
-}
-
-.item-title {
-  font-weight: bold;
-  color: var(--terminal-green);
-}
-
-.item-description {
-  color: var(--terminal-green);
-  opacity: 0.8;
-}
-
-/* Fix for ProjectsSection styling */
-.projects-display {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
 .ascii-container {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Add these at the bottom */
-.container {
-  width: 100%;
-  max-width: 100%;
-  padding: 0 2rem;
-}
-
-@media (min-width: 1024px) {
-  .main-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    align-items: start;
-  }
-}
-
-.full-viewport {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.section-box {
-  border: var(--terminal-border);
-  border-radius: 4px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  background: var(--terminal-black);
-  box-shadow: var(--terminal-glow);
-}
-
-.box-header {
-  border-bottom: var(--terminal-border);
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
 }
