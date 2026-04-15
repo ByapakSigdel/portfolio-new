@@ -99,13 +99,13 @@ const HeroSection = () => {
   // Modified section variants - only border color change, no scale
   const sectionVariants = {
     hover: {
-      borderColor: 'rgba(0, 230, 57, 0.6)',
+      borderColor: 'var(--border-strong)',
       transition: {
         duration: 0.3
       }
     },
     initial: {
-      borderColor: 'rgba(0, 230, 57, 0.15)'
+      borderColor: 'var(--border-soft)'
     }
   };
 
@@ -181,9 +181,9 @@ const HeroSection = () => {
       <div className="w-full">
         <div className="flex flex-col lg:flex-row min-h-[300px]">
           {/* ASCII Art Container - smaller */}
-          <div className="flex-shrink-0 hidden md:flex items-center justify-center border-r border-[var(--border-soft)] p-4 bg-gradient-to-br from-transparent to-[rgba(0,230,57,0.02)] w-[300px]">
+          <div className="flex-shrink-0 hidden md:flex items-center justify-center border-r border-[var(--border-soft)] p-4 bg-gradient-to-br from-transparent to-[rgba(34,197,94,0.06)] w-[300px]">
             <pre
-              className="text-[#00E639] font-mono whitespace-pre select-none"
+              className="text-[var(--accent-strong)] font-mono whitespace-pre select-none"
               style={{
                 fontFamily: '"Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace',
                 fontSize: '5px',
@@ -191,8 +191,8 @@ const HeroSection = () => {
                 letterSpacing: '-0.1px',
                 textRendering: 'geometricPrecision',
                 fontWeight: '600',
-                textShadow: '0 0 6px rgba(0, 230, 57, 0.3)',
-                filter: 'contrast(1.4) brightness(1.15)',
+                textShadow: '0 0 4px rgba(34, 197, 94, 0.18)',
+                filter: 'contrast(1.12) brightness(1)',
                 margin: 0,
                 padding: 0,
                 maxWidth: 'fit-content',
@@ -208,7 +208,7 @@ const HeroSection = () => {
           {/* Mobile ASCII Art */}
           <div className="flex-shrink-0 flex md:hidden items-center justify-center border-b border-[var(--border-soft)] overflow-hidden" style={{ height: '160px' }}>
             <pre
-              className="text-[#00E639] font-mono whitespace-pre select-none"
+              className="text-[var(--accent-strong)] font-mono whitespace-pre select-none"
               style={{
                 fontFamily: '"Cascadia Code", "Fira Code", "Consolas", "Courier New", monospace',
                 fontSize: '5px',
@@ -216,7 +216,7 @@ const HeroSection = () => {
                 letterSpacing: '-0.1px',
                 textRendering: 'geometricPrecision',
                 fontWeight: '600',
-                filter: 'contrast(1.4) brightness(1.15)',
+                filter: 'contrast(1.12) brightness(1)',
                 margin: 0,
                 padding: 0,
                 maxWidth: 'fit-content',
@@ -240,18 +240,18 @@ const HeroSection = () => {
               whileHover="hover"
               initial="initial"
             >
-              <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full">
-                  <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[#00E639] to-[#33EB61] bg-clip-text text-transparent mb-3">
+                <div className="flex flex-col items-center lg:items-start text-center lg:text-left w-full">
+                  <h1 className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-[rgba(34,197,94,0.92)] to-[rgba(110,231,161,0.94)] bg-clip-text text-transparent mb-3">
                   mahan sigdel
                 </h1>
-                <p className="text-sm lg:text-base text-[#00E639] mb-2 leading-relaxed">
+                <p className="text-sm lg:text-base text-[var(--accent-strong)] mb-2 leading-relaxed">
                   an engineer who loves tinkering with software and hardware.
                 </p>
-                <p className="text-sm lg:text-base text-[#00E639] mb-3 leading-relaxed">
+                <p className="text-sm lg:text-base text-[var(--accent-strong)] mb-3 leading-relaxed">
                   contact me at my{' '}
                   <a 
                     href="mailto:sigdelmb123@gmail.com" 
-                    className="text-[#33EB61] hover:text-white underline decoration-2 underline-offset-2 transition-colors"
+                    className="text-[var(--accent-hover)] hover:text-[#bbf7d0] underline decoration-2 underline-offset-2 transition-colors"
                   >
                     mail
                   </a>
@@ -260,7 +260,7 @@ const HeroSection = () => {
                     href="https://www.linkedin.com/in/mahansigdel" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    className="text-[#33EB61] hover:text-white underline decoration-2 underline-offset-2 transition-colors"
+                    className="text-[var(--accent-hover)] hover:text-[#bbf7d0] underline decoration-2 underline-offset-2 transition-colors"
                   >
                     linkedin
                   </a>
@@ -269,14 +269,14 @@ const HeroSection = () => {
                 
                 {/* Quote - smaller text */}
                 {isClient && quote && (
-                  <p className="text-xs lg:text-sm italic text-[#00E639] opacity-80 leading-relaxed max-w-lg">
+                  <p className="text-xs lg:text-sm italic text-[var(--accent-medium)] opacity-90 leading-relaxed max-w-lg">
                     &ldquo;{quote}&rdquo;
                   </p>
                 )}
                 
                 {/* Fallback quote for SSR */}
                 {!isClient && (
-                  <p className="text-xs lg:text-sm italic text-[#00E639] opacity-80 leading-relaxed max-w-lg">
+                  <p className="text-xs lg:text-sm italic text-[var(--accent-medium)] opacity-90 leading-relaxed max-w-lg">
                     &ldquo;No matter how deep the night, it always turns to day.&rdquo;
                   </p>
                 )}
@@ -292,15 +292,15 @@ const HeroSection = () => {
                   animate="animate"
                 >
                   <div className="flex items-center">
-                    <span className="text-xs text-[#00E639] font-mono tracking-wider px-3">{currentRiddle}</span>
-                    <span className="mx-6 text-[#00E639] opacity-70">•</span>
+                    <span className="text-xs text-[var(--accent-medium)] font-mono tracking-wider px-3">{currentRiddle}</span>
+                    <span className="mx-6 text-[var(--accent-medium)] opacity-65">•</span>
                   </div>
                   
                   {/* Duplicate riddle to create seamless loop */}
-                  {Array(10).fill(0).map((_, i) => (
+                    {Array(10).fill(0).map((_, i) => (
                     <div key={i} className="flex items-center">
-                      <span className="text-xs text-[#00E639] font-mono tracking-wider px-3">{currentRiddle}</span>
-                      <span className="mx-6 text-[#00E639] opacity-70">•</span>
+                      <span className="text-xs text-[var(--accent-medium)] font-mono tracking-wider px-3">{currentRiddle}</span>
+                      <span className="mx-6 text-[var(--accent-medium)] opacity-65">•</span>
                     </div>
                   ))}
                 </motion.div>
@@ -310,10 +310,10 @@ const HeroSection = () => {
               {!isClient && (
                 <div className="absolute whitespace-nowrap flex items-center h-full">
                   <div className="flex items-center">
-                    <span className="text-xs text-[#00E639] font-mono tracking-wider px-3">
+                    <span className="text-xs text-[var(--accent-medium)] font-mono tracking-wider px-3">
                       ... ..- -... ... -.-. .-. .. -... . / - --- / -.-. .... .. -.-- .- -....- .--. --- .--. / --. ..- ..-. ..-
                     </span>
-                    <span className="mx-6 text-[#00E639] opacity-70">•</span>
+                    <span className="mx-6 text-[var(--accent-medium)] opacity-65">•</span>
                   </div>
                 </div>
               )}
@@ -326,47 +326,47 @@ const HeroSection = () => {
               whileHover="hover"
               initial="initial"
             >
-              <span className="text-[10px] uppercase tracking-[0.2em] mb-3 text-center lg:text-left" style={{ color: 'rgba(0,230,57,0.5)' }}>recommendations</span>
+              <span className="text-[10px] uppercase tracking-[0.2em] mb-3 text-center lg:text-left" style={{ color: 'rgba(34,197,94,0.58)' }}>recommendations</span>
               <div className="flex justify-between items-center w-full">
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
-                   className="cursor-pointer transition-all duration-200 hover:text-[#33EB61] p-1"
+                   className="cursor-pointer transition-all duration-200 hover:text-[var(--accent-hover)] p-1"
                   onClick={() => handleClick('music')}
                   title="song rec"
                 >
-                  <Music size={20} className="text-[#00E639]" />
+                  <Music size={20} className="text-[var(--accent-strong)]" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
-                  className="cursor-pointer transition-all duration-200 hover:text-[#33EB61] p-1"
+                  className="cursor-pointer transition-all duration-200 hover:text-[var(--accent-hover)] p-1"
                   onClick={() => handleClick('movie')}
                   title="movie rec"
                 >
-                  <Film size={20} className="text-[#00E639]" />
+                  <Film size={20} className="text-[var(--accent-strong)]" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
-                  className="cursor-pointer transition-all duration-200 hover:text-[#33EB61] p-1"
+                  className="cursor-pointer transition-all duration-200 hover:text-[var(--accent-hover)] p-1"
                   onClick={() => handleClick('image')}
                   title="image rec"
                 >
-                  <ImageIcon size={20} className="text-[#00E639]" />
+                  <ImageIcon size={20} className="text-[var(--accent-strong)]" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
-                  className="cursor-pointer transition-all duration-200 hover:text-[#33EB61] p-1"
+                  className="cursor-pointer transition-all duration-200 hover:text-[var(--accent-hover)] p-1"
                    onClick={() => handleClick('book')}
                   title="book rec"
                 >
-                  <BookOpen size={20} className="text-[#00E639]" />
+                  <BookOpen size={20} className="text-[var(--accent-strong)]" />
                 </motion.div>
                 <motion.div 
                   whileHover={{ scale: 1.1, y: -2 }} 
-                  className="cursor-pointer transition-all duration-200 hover:text-[#33EB61] p-1"
+                  className="cursor-pointer transition-all duration-200 hover:text-[var(--accent-hover)] p-1"
                   onClick={() => handleClick('misc')}
                   title="misc rec"
                 >
-                  <Heart size={20} className="text-[#00E639]" />
+                  <Heart size={20} className="text-[var(--accent-strong)]" />
                 </motion.div>
               </div>
             </motion.div>

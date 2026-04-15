@@ -21,10 +21,10 @@ import {
 import { useGraphsData } from './GraphsData';
 import { motion, useInView } from 'framer-motion';
 
-const ACCENT = '#00E639';
-const ACCENT_RGB = '0,230,57';
+const ACCENT = '#22c55e';
+const ACCENT_RGB = '34,197,94';
 
-const PIE_COLORS = ['#00E639', '#33EB61', '#66F08A', '#99F5B2', '#00B82E', '#008C23'];
+const PIE_COLORS = ['#22c55e', '#4ade80', '#86efac', '#16a34a', '#65a30d', '#a3e635'];
 
 // Contribution tooltip
 function ContributionTooltip({

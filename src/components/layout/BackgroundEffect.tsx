@@ -15,12 +15,14 @@ const MOUSE_CONNECT_DIST = 260;
 const MOUSE_RADIUS = 300;
 const DRIFT_SPEED = 0.12;
 
-const BASE_LINE_ALPHA = 0.12;
-const ACTIVE_LINE_ALPHA = 0.35;
-const CURSOR_LINE_ALPHA = 0.25;
-const STAR_ALPHA_MIN = 0.2;
-const STAR_ALPHA_MAX = 0.5;
-const ACTIVE_STAR_ALPHA = 0.75;
+const STAR_RGB = '34,197,94';
+
+const BASE_LINE_ALPHA = 0.05;
+const ACTIVE_LINE_ALPHA = 0.17;
+const CURSOR_LINE_ALPHA = 0.12;
+const STAR_ALPHA_MIN = 0.1;
+const STAR_ALPHA_MAX = 0.3;
+const ACTIVE_STAR_ALPHA = 0.45;
 
 interface Star {
   x: number;
@@ -176,7 +178,7 @@ export default function BackgroundEffect() {
             ctx.beginPath();
             ctx.moveTo(stars[i].x, stars[i].y);
             ctx.lineTo(stars[j].x, stars[j].y);
-            ctx.strokeStyle = `rgba(0,230,57,${alpha})`;
+            ctx.strokeStyle = `rgba(${STAR_RGB},${alpha})`;
             ctx.lineWidth = 0.6;
             ctx.stroke();
           }
@@ -198,7 +200,7 @@ export default function BackgroundEffect() {
             ctx.beginPath();
             ctx.moveTo(stars[i].x, stars[i].y);
             ctx.lineTo(stars[j].x, stars[j].y);
-            ctx.strokeStyle = `rgba(0,230,57,${alpha})`;
+            ctx.strokeStyle = `rgba(${STAR_RGB},${alpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }
@@ -215,7 +217,7 @@ export default function BackgroundEffect() {
             ctx.beginPath();
             ctx.moveTo(stars[i].x, stars[i].y);
             ctx.lineTo(mx, my);
-            ctx.strokeStyle = `rgba(0,230,57,${alpha})`;
+            ctx.strokeStyle = `rgba(${STAR_RGB},${alpha})`;
             ctx.lineWidth = 0.5;
             ctx.stroke();
           }
@@ -227,7 +229,7 @@ export default function BackgroundEffect() {
         const alpha = s.baseAlpha + s.activation * (ACTIVE_STAR_ALPHA - s.baseAlpha);
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.radius + s.activation * 1.0, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(0,230,57,${alpha})`;
+        ctx.fillStyle = `rgba(${STAR_RGB},${alpha})`;
         ctx.fill();
       }
 

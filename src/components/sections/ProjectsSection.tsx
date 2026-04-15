@@ -85,8 +85,8 @@ const ProjectsSection: React.FC = () => {
     }
   ];
   
-  const textColor = { color: '#00E639' };
-  const hoverTextColor = { color: '#00B82E' }; // Slightly darker green for hover effect
+  const textColor = { color: 'var(--accent-strong)' };
+  const hoverTextColor = { color: 'var(--accent-hover)' };
   
   const handleLinkClick = (e: React.MouseEvent): void => {
     // Prevent the click from triggering the parent's onClick handler
@@ -110,13 +110,13 @@ const ProjectsSection: React.FC = () => {
               style={{
                 borderStyle: 'solid',
                 borderWidth: 1,
-                borderColor: isHovered ? 'rgba(0,230,57,0.7)' : 'rgba(0,230,57,0.15)'
+                borderColor: isHovered ? 'rgba(34,197,94,0.34)' : 'var(--border-soft)'
               }}
             >
               <div 
                 className={`flex items-center justify-between p-3 group cursor-pointer transition-all duration-300`}
                 style={{
-                  backgroundColor: isHovered ? 'rgba(0,230,57,0.15)' : undefined
+                  backgroundColor: isHovered ? 'rgba(34,197,94,0.1)' : undefined
                 }}
                 onClick={() => toggleExpand(index)}
                 onMouseEnter={() => setHoverIndex(index)}
@@ -153,14 +153,14 @@ const ProjectsSection: React.FC = () => {
                               }
                             : project.status === 'Completed'
                             ? {
-                                color: '#050505',
-                                border: '1px solid #A78BFA',
-                                backgroundColor: '#A78BFA',
+                                color: '#07120f',
+                                border: '1px solid rgba(139,164,191,0.56)',
+                                backgroundColor: 'rgba(139,164,191,0.74)',
                               }
                             : {
-                                color: '#050505',
-                                border: '1px solid #00E639',
-                                backgroundColor: '#00E639',
+                                color: '#07120f',
+                                border: '1px solid rgba(34,197,94,0.6)',
+                                backgroundColor: 'rgba(34,197,94,0.78)',
                               }
                         }
                       >
@@ -190,10 +190,10 @@ const ProjectsSection: React.FC = () => {
                 onMouseEnter={() => setHoverIndex(index)}
                 style={{
                   backgroundColor: isExpanded
-                    ? 'rgba(0,230,57,0.05)'
+                    ? 'rgba(34,197,94,0.05)'
                     : isHovered
-                    ? 'rgba(0,230,57,0.08)'
-                    : 'rgba(0,230,57,0.05)'
+                    ? 'rgba(34,197,94,0.08)'
+                    : 'rgba(34,197,94,0.05)'
                 }}
               >
                 <p className="text-xs mb-3" style={{...textColor, opacity: 0.9}}>

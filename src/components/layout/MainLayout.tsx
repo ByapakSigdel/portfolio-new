@@ -35,7 +35,7 @@ interface CollapsibleProps {
 const sectionVariants = {
   hover: {
     scale: 1.01,
-    borderColor: 'rgba(0, 230, 57, 0.6)',
+    borderColor: 'var(--border-strong)',
     transition: {
       type: "spring",
       stiffness: 300,
@@ -44,13 +44,13 @@ const sectionVariants = {
   },
   initial: {
     scale: 1,
-    borderColor: 'rgba(0, 230, 57, 0.15)'
+    borderColor: 'var(--border-soft)'
   }
 };
 
 const glowVariants = {
   hover: {
-    opacity: 0.5,
+    opacity: 0.36,
     transition: { duration: 0.3 }
   },
   initial: {
@@ -96,14 +96,14 @@ export default function MainLayout() {
         className="absolute inset-0 -z-10 pointer-events-none"
         variants={glowVariants}
       >
-        <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00E639] to-transparent" />
-        <div className="absolute -bottom-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00E639] to-transparent" />
-        <div className="absolute left-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00E639] to-transparent" />
-        <div className="absolute right-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#00E639] to-transparent" />
+        <div className="absolute -top-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
+        <div className="absolute -bottom-px left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#22c55e] to-transparent" />
+        <div className="absolute left-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#22c55e] to-transparent" />
+        <div className="absolute right-px top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#22c55e] to-transparent" />
       </motion.div>
       
       {/* Title label - sits on top border with background to mask the border line */}
-      <div className="absolute top-0 right-4 -translate-y-1/2 px-2 z-10" style={{ backgroundColor: '#050505' }}>
+      <div className="absolute top-0 right-4 -translate-y-1/2 px-2 z-10" style={{ backgroundColor: 'var(--page-bg)' }}>
         <span className="text-sm md:text-base font-bold" style={{ color: 'var(--accent-strong)' }}>{title}</span>
       </div>
       
@@ -140,14 +140,16 @@ export default function MainLayout() {
       <style jsx global>{`
         :root {
           --font-jost: ${jost.style.fontFamily};
-          --accent-rgb: 0,230,57;
-          --accent: rgba(var(--accent-rgb), 1);
-          --accent-strong: rgba(var(--accent-rgb), 0.95);
-          --accent-medium: rgba(var(--accent-rgb), 0.85);
-          --accent-soft: rgba(var(--accent-rgb), 0.15);
-          --border-strong: rgba(var(--accent-rgb), 0.38);
-          --border-soft: rgba(var(--accent-rgb), 0.15);
-          --bg-banner: rgba(var(--accent-rgb), 0.12);
+          --accent-rgb: 34,197,94;
+          --accent: rgba(var(--accent-rgb), 0.95);
+          --accent-strong: rgba(var(--accent-rgb), 0.94);
+          --accent-medium: rgba(var(--accent-rgb), 0.8);
+          --accent-soft: rgba(var(--accent-rgb), 0.18);
+          --accent-hover: #6ee7a1;
+          --border-strong: rgba(var(--accent-rgb), 0.36);
+          --border-soft: rgba(var(--accent-rgb), 0.2);
+          --bg-banner: rgba(var(--accent-rgb), 0.11);
+          --page-bg: #030603;
           --chart-area-alpha: 0.18;
         }
 
@@ -157,28 +159,28 @@ export default function MainLayout() {
         
         .custom-scrollbar::-webkit-scrollbar {
           width: 6px;
-          background-color: #000000;
+          background-color: rgba(0, 0, 0, 0.45);
         }
         
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background-color: rgba(0, 230, 57, 0.5);
+          background-color: rgba(var(--accent-rgb), 0.4);
           border-radius: 0;
           border: none;
         }
         
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background-color: rgba(0, 230, 57, 0.8);
+          background-color: rgba(var(--accent-rgb), 0.58);
         }
         
         .custom-scrollbar::-webkit-scrollbar-track {
-          background-color: rgba(0, 0, 0, 0.3);
+          background-color: rgba(0, 0, 0, 0.28);
           border-radius: 0;
         }
         
         /* Firefox scrollbar */
         .custom-scrollbar {
           scrollbar-width: thick;
-          scrollbar-color: rgba(0, 230, 57, 0.5) #000000;
+          scrollbar-color: rgba(var(--accent-rgb), 0.4) rgba(0, 0, 0, 0.45);
         }
       `}</style>
 
@@ -282,7 +284,7 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
           whileHover={{ scale: 1.05 }}
           style={{ color: 'var(--accent-strong)' }}
         >
-          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-xs" style={{ color: 'rgba(0,230,57,0.7)' }}>tap to expand</span>}
+          {isOpen ? '▲' : '▼'} {!isOpen && <span className="text-xs" style={{ color: 'var(--accent-medium)' }}>tap to expand</span>}
         </motion.span>
       </div>
       
@@ -294,7 +296,7 @@ function Collapsible({ children, defaultOpen = false, isSmallPhone }: Collapsibl
       >
         {isOpen ? children : (
             <div className="h-8 flex items-center justify-center">
-            <span className="text-xs" style={{ color: 'rgba(0,230,57,0.5)' }}>Content collapsed</span>
+            <span className="text-xs" style={{ color: 'rgba(var(--accent-rgb), 0.46)' }}>Content collapsed</span>
             </div>
         )}
       </motion.div>

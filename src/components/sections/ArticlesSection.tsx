@@ -38,8 +38,8 @@ const ArticlesSection: React.FC = () => {
     },
   ];
 
-  const textColor = { color: '#00E639' };
-  const hoverTextColor = { color: '#00B82E' }; // Slightly darker green for hover effect
+  const textColor = { color: 'var(--accent-strong)' };
+  const hoverTextColor = { color: 'var(--accent-hover)' };
 
   return (
     <section className="w-full">
@@ -59,8 +59,8 @@ const ArticlesSection: React.FC = () => {
               style={{
                 borderStyle: 'solid',
                 borderWidth: 1,
-                borderColor: isHovered ? 'rgba(0,230,57,0.7)' : 'rgba(0,230,57,0.15)',
-                backgroundColor: isHovered ? 'rgba(0,230,57,0.15)' : undefined
+                borderColor: isHovered ? 'rgba(34,197,94,0.34)' : 'var(--border-soft)',
+                backgroundColor: isHovered ? 'rgba(34,197,94,0.1)' : undefined
               }}
             >
               <div className="flex items-center gap-3">
